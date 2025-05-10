@@ -19,7 +19,7 @@ const RequireAuth = ({ children }: RequireAuthProps) => {
   }
 
   if (!user) {
-    // Redirect to the login page with a return path
+    // Redirect to the auth page with a return path
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 

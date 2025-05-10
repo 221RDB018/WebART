@@ -36,6 +36,7 @@ const Auth = () => {
   const [activeTab, setActiveTab] = useState("login");
   const location = useLocation();
 
+  // Create forms inside the component function
   const loginForm = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -61,6 +62,7 @@ const Auth = () => {
       await signIn(values.email, values.password);
     } catch (error) {
       console.error("Login error:", error);
+      setAuthError(error instanceof Error ? error.message : "Failed to sign in");
     }
   };
 
@@ -71,12 +73,14 @@ const Auth = () => {
       setActiveTab("login");
     } catch (error) {
       console.error("Registration error:", error);
+      setAuthError(error instanceof Error ? error.message : "Failed to sign up");
     }
   };
 
   // If the user is already logged in, redirect to the home page
   if (user && !loading) {
-    return <Navigate to="/" replace />;
+    const from = location.state?.from?.pathname || "/";
+    return <Navigate to={from} replace />;
   }
 
   return (
