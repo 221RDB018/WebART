@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
             <Link to="/" className="font-serif text-xl font-semibold text-art-dark">
-              ArtCanvas
+              WebART
             </Link>
             <p className="mt-4 text-muted-foreground max-w-md">
               Discover unique art pieces from talented artists around the world and customize them to perfectly fit your space.
@@ -38,7 +38,7 @@ const Footer = () => {
         
         <div className="border-t mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} ArtCanvas. All rights reserved.
+            © {new Date().getFullYear()} WebART. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <a href="#" className="text-muted-foreground hover:text-art-purple transition-colors">
