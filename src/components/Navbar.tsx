@@ -31,7 +31,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <Link to="/" className="font-serif text-2xl font-semibold text-art-dark">
-              ArtCanvas
+              WebART
             </Link>
           </div>
           
@@ -42,12 +42,12 @@ const Navbar = () => {
             <Link to="/gallery" className="font-medium hover:text-art-purple transition-colors">
               Gallery
             </Link>
-            <Link to="/about" className="font-medium hover:text-art-purple transition-colors">
+{/*             <Link to="/about" className="font-medium hover:text-art-purple transition-colors">
               About
             </Link>
             <Link to="/contact" className="font-medium hover:text-art-purple transition-colors">
               Contact
-            </Link>
+            </Link> */}
           </div>
           
           <div className="flex items-center space-x-4">
