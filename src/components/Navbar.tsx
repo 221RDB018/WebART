@@ -1,15 +1,24 @@
 
 import { Link } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
-import { ShoppingCart } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { ShoppingCart, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import CartSheet from "./CartSheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 const Navbar = () => {
   const { cartCount } = useCart();
+  const { user, signOut } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -42,6 +51,29 @@ const Navbar = () => {
           </div>
           
           <div className="flex items-center space-x-4">
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <User className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/auth">Sign In</Link>
+              </Button>
+            )}
+
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" className="relative">
@@ -114,6 +146,14 @@ const Navbar = () => {
               <Link to="/contact" className="font-medium py-2 hover:text-art-purple transition-colors">
                 Contact
               </Link>
+              {!user && (
+                <>
+                  <Separator />
+                  <Link to="/auth" className="font-medium py-2 hover:text-art-purple transition-colors">
+                    Sign In
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -1,8 +1,10 @@
 
-import { useState } from 'react';
-import { artworks } from '../data/artworks';
+import { useState, useEffect } from 'react';
 import ArtworkCard from '../components/ArtworkCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Artwork } from '../types';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState('all');
@@ -15,6 +17,33 @@ const Gallery = () => {
     { id: 'photography', name: 'Photography' },
     { id: 'floral', name: 'Floral' }
   ];
+
+  const { data: artworks = [], isLoading, error } = useQuery({
+    queryKey: ['artworks'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('artworks')
+        .select('*');
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      
+      return data.map(artwork => ({
+        id: artwork.id,
+        title: artwork.title,
+        artist: artwork.artist,
+        description: artwork.description || '',
+        price: Number(artwork.price),
+        imageUrl: artwork.image_url,
+        dimensions: {
+          width: artwork.width,
+          height: artwork.height,
+        },
+        category: artwork.category
+      }));
+    }
+  });
 
   const filteredArtworks = activeCategory === 'all' 
     ? artworks 
@@ -45,20 +74,31 @@ const Gallery = () => {
             </TabsList>
           </div>
           
-          {categories.map(category => (
-            <TabsContent key={category.id} value={category.id} className="animate-fade-in">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {filteredArtworks.map(artwork => (
-                  <ArtworkCard key={artwork.id} artwork={artwork} />
-                ))}
-              </div>
-              {filteredArtworks.length === 0 && (
-                <div className="text-center py-12">
-                  <p className="text-muted-foreground">No artworks found in this category.</p>
+          {isLoading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
+              <p className="mt-4 text-muted-foreground">Loading artworks...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12 text-red-500">
+              <p>Error loading artworks. Please try again later.</p>
+            </div>
+          ) : (
+            categories.map(category => (
+              <TabsContent key={category.id} value={category.id} className="animate-fade-in">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {filteredArtworks.map(artwork => (
+                    <ArtworkCard key={artwork.id} artwork={artwork} />
+                  ))}
                 </div>
-              )}
-            </TabsContent>
-          ))}
+                {filteredArtworks.length === 0 && (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">No artworks found in this category.</p>
+                  </div>
+                )}
+              </TabsContent>
+            ))
+          )}
         </Tabs>
       </div>
     </div>
