@@ -16,6 +16,7 @@ import ArPreview from "./pages/ArPreview";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import RequireAuth from "./components/RequireAuth";
+import UploadArtwork from "./pages/UploadArtwork";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
                 <Route path="/artwork/:id" element={<ArtworkDetail />} />
                 <Route path="/ar-preview/:id" element={<ArPreview />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/upload-artwork" element={<UploadArtwork />} />
                 <Route 
                   path="/profile" 
                   element={

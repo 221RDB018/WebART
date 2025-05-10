@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { getArtworkById, frames } from "../data/artworks";
@@ -19,9 +19,34 @@ const ArtworkDetail = () => {
 
   const artwork = id ? getArtworkById(id) : undefined;
 
+  // Convert inches to cm for display
+  const initialWidthInCm = artwork ? Math.round(artwork.dimensions.width * 2.54) : 60;
+  const initialHeightInCm = artwork ? Math.round(artwork.dimensions.height * 2.54) : 90;
+
   const [selectedFrame, setSelectedFrame] = useState<Frame | undefined>(undefined);
-  const [customWidth, setCustomWidth] = useState(artwork?.dimensions.width || 24);
-  const [customHeight, setCustomHeight] = useState(artwork?.dimensions.height || 36);
+  const [customWidth, setCustomWidth] = useState(initialWidthInCm);
+  const [customHeight, setCustomHeight] = useState(initialHeightInCm);
+
+  // Calculate min and max dimensions in centimeters
+  const minWidthInCm = useMemo(() => {
+    if (!artwork) return 20;
+    return Math.max(20, Math.floor(artwork.dimensions.width * 2.54 * 0.5));
+  }, [artwork]);
+
+  const maxWidthInCm = useMemo(() => {
+    if (!artwork) return 150;
+    return Math.ceil(artwork.dimensions.width * 2.54 * 2);
+  }, [artwork]);
+
+  const minHeightInCm = useMemo(() => {
+    if (!artwork) return 20;
+    return Math.max(20, Math.floor(artwork.dimensions.height * 2.54 * 0.5));
+  }, [artwork]);
+
+  const maxHeightInCm = useMemo(() => {
+    if (!artwork) return 150;
+    return Math.ceil(artwork.dimensions.height * 2.54 * 2);
+  }, [artwork]);
 
   if (!artwork) {
     return (
@@ -35,7 +60,11 @@ const ArtworkDetail = () => {
   }
 
   const handleAddToCart = () => {
-    addToCart(artwork, selectedFrame, customWidth, customHeight);
+    // Convert cm back to inches for storage
+    const widthInInches = customWidth / 2.54;
+    const heightInInches = customHeight / 2.54;
+    
+    addToCart(artwork, selectedFrame, widthInInches, heightInInches);
   };
 
   const handleFrameSelect = (frameId: string) => {
@@ -44,7 +73,8 @@ const ArtworkDetail = () => {
   };
 
   // Calculate price based on dimensions (simplified version)
-  const originalArea = artwork.dimensions.width * artwork.dimensions.height;
+  // Original dimensions in inches converted to cm for proper ratio calculation
+  const originalArea = (artwork.dimensions.width * 2.54) * (artwork.dimensions.height * 2.54);
   const customArea = customWidth * customHeight;
   const sizeFactor = customArea / originalArea;
   
@@ -139,15 +169,15 @@ const ArtworkDetail = () => {
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between mb-2">
-                    <Label htmlFor="width-slider">Width: {customWidth}"</Label>
+                    <Label htmlFor="width-slider">Width: {customWidth} cm</Label>
                     <span className="text-sm text-muted-foreground">
-                      Original: {artwork.dimensions.width}"
+                      Original: {Math.round(artwork.dimensions.width * 2.54)} cm
                     </span>
                   </div>
                   <Slider
                     id="width-slider"
-                    min={Math.max(8, Math.floor(artwork.dimensions.width * 0.5))}
-                    max={Math.ceil(artwork.dimensions.width * 2)}
+                    min={minWidthInCm}
+                    max={maxWidthInCm}
                     step={1}
                     value={[customWidth]}
                     onValueChange={(value) => setCustomWidth(value[0])}
@@ -156,15 +186,15 @@ const ArtworkDetail = () => {
                 
                 <div>
                   <div className="flex justify-between mb-2">
-                    <Label htmlFor="height-slider">Height: {customHeight}"</Label>
+                    <Label htmlFor="height-slider">Height: {customHeight} cm</Label>
                     <span className="text-sm text-muted-foreground">
-                      Original: {artwork.dimensions.height}"
+                      Original: {Math.round(artwork.dimensions.height * 2.54)} cm
                     </span>
                   </div>
                   <Slider
                     id="height-slider"
-                    min={Math.max(8, Math.floor(artwork.dimensions.height * 0.5))}
-                    max={Math.ceil(artwork.dimensions.height * 2)}
+                    min={minHeightInCm}
+                    max={maxHeightInCm}
                     step={1}
                     value={[customHeight]}
                     onValueChange={(value) => setCustomHeight(value[0])}
@@ -176,7 +206,7 @@ const ArtworkDetail = () => {
             <Card className="mb-6">
               <CardContent className="p-4">
                 <div className="flex justify-between mb-2">
-                  <span>Artwork ({customWidth}" × {customHeight}")</span>
+                  <span>Artwork ({customWidth} × {customHeight} cm)</span>
                   <span>{formatCurrency(adjustedArtPrice)}</span>
                 </div>
                 {selectedFrame && (
@@ -204,7 +234,7 @@ const ArtworkDetail = () => {
                 size="lg"
                 variant="outline"
                 className="w-full sm:w-1/3"
-                onClick={() => navigate('/ar-preview/' + artwork.id)}
+                onClick={() => navigate('/ar-preview/' + artwork.id + (selectedFrame ? `?frame=${selectedFrame.id}` : ''))}
               >
                 AR Preview
               </Button>

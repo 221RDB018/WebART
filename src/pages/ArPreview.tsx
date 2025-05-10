@@ -1,14 +1,17 @@
 
-import { useParams, useNavigate } from "react-router-dom";
-import { getArtworkById } from "../data/artworks";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { getArtworkById, getFrameById } from "../data/artworks";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
 const ArPreview = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const frameId = searchParams.get('frame');
 
   const artwork = id ? getArtworkById(id) : undefined;
+  const frame = frameId ? getFrameById(frameId) : undefined;
 
   if (!artwork) {
     return (
@@ -42,13 +45,27 @@ const ArPreview = () => {
         
         <div className="bg-art-light rounded-xl p-8 mb-8 text-center">
           <div className="max-w-md mx-auto">
-            <img
-              src={artwork.imageUrl}
-              alt={artwork.title}
-              className="h-64 object-contain mx-auto mb-6"
-            />
+            {/* Display artwork with frame if selected */}
+            <div className="relative inline-block mb-6">
+              {frame && (
+                <div 
+                  className="absolute inset-0 border-8 rounded-sm" 
+                  style={{ borderColor: frame.color }}
+                />
+              )}
+              <img
+                src={artwork.imageUrl}
+                alt={artwork.title}
+                className="h-64 object-contain mx-auto relative"
+              />
+            </div>
+            
             <h2 className="text-xl font-serif font-medium mb-2">{artwork.title}</h2>
             <p className="text-muted-foreground mb-4">by {artwork.artist}</p>
+            
+            {frame && (
+              <p className="text-sm mb-4">Frame: {frame.name}</p>
+            )}
             
             <Button 
               disabled

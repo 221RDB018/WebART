@@ -1,12 +1,16 @@
 
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import ArtworkCard from '../components/ArtworkCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Upload } from 'lucide-react';
 import { Artwork } from '../types';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 
 const Gallery = () => {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('all');
 
   const categories = [
@@ -15,7 +19,8 @@ const Gallery = () => {
     { id: 'landscape', name: 'Landscape' },
     { id: 'portrait', name: 'Portrait' },
     { id: 'photography', name: 'Photography' },
-    { id: 'floral', name: 'Floral' }
+    { id: 'floral', name: 'Floral' },
+    { id: 'custom', name: 'My Uploads' }
   ];
 
   const { data: artworks = [], isLoading, error } = useQuery({
@@ -54,9 +59,16 @@ const Gallery = () => {
       <div className="art-container">
         <div className="mb-10 text-center">
           <h1 className="text-3xl md:text-4xl font-serif mb-4">Art Gallery</h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
             Explore our curated collection of unique artworks from talented artists around the world.
           </p>
+          <Button 
+            onClick={() => navigate('/upload-artwork')} 
+            className="flex items-center gap-2"
+          >
+            <Upload size={18} />
+            Upload Your Artwork
+          </Button>
         </div>
 
         <Tabs defaultValue="all" className="mb-8">
@@ -93,7 +105,16 @@ const Gallery = () => {
                 </div>
                 {filteredArtworks.length === 0 && (
                   <div className="text-center py-12">
-                    <p className="text-muted-foreground">No artworks found in this category.</p>
+                    <p className="text-muted-foreground mb-4">No artworks found in this category.</p>
+                    {category.id === 'custom' && (
+                      <Button 
+                        onClick={() => navigate('/upload-artwork')} 
+                        className="flex items-center gap-2"
+                      >
+                        <Upload size={18} />
+                        Upload Your First Artwork
+                      </Button>
+                    )}
                   </div>
                 )}
               </TabsContent>
