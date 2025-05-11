@@ -88,35 +88,50 @@ export const frames: Frame[] = [
     name: "Classic Black",
     previewUrl: "/frames/black-frame.png",
     price: 85,
-    color: "#000000"
+    color: "#000000",
+    metalness: 0.1,
+    roughness: 0.75,
+    envMapIntensity: 1.0
   },
   {
     id: "frame-2",
     name: "Modern White",
     previewUrl: "/frames/white-frame.png",
     price: 75,
-    color: "#FFFFFF"
+    color: "#FFFFFF",
+    metalness: 0.9,
+    roughness: 0.1,
+    envMapIntensity: 1.0
   },
   {
     id: "frame-3",
     name: "Natural Wood",
     previewUrl: "/frames/wood-frame.png",
     price: 95,
-    color: "#C19A6B"
+    color: "#C19A6B",
+    metalness: 0.1,
+    roughness: 0.75,
+    envMapIntensity: 1.0
   },
   {
     id: "frame-4",
     name: "Gold Finish",
     previewUrl: "/frames/gold-frame.png",
     price: 120,
-    color: "#D4AF37"
+    color: "#D4AF37",
+    metalness: 0.9,
+    roughness: 0.1,
+    envMapIntensity: 1.0
   },
   {
     id: "frame-5",
     name: "Silver Metal",
     previewUrl: "/frames/silver-frame.png",
     price: 110,
-    color: "#C0C0C0"
+    color: "#C0C0C0",
+    metalness: 0.9,
+    roughness: 0.1,
+    envMapIntensity: 1.0
   }
 ];
 
