@@ -44,21 +44,18 @@ const ArPreview = () => {
         </div>
         
         <div className="bg-art-light rounded-xl p-8 mb-8 text-center">
-          <div className="max-w-md mx-auto">
-            {/* Display artwork with frame if selected */}
-            <div className="relative inline-block mb-6">
-              {frame && (
-                <div 
-                  className="absolute inset-0 border-8 rounded-sm" 
-                  style={{ borderColor: frame.color }}
-                />
-              )}
-              <img
-                src={artwork.imageUrl}
-                alt={artwork.title}
-                className="h-64 object-contain mx-auto relative"
-              />
-            </div>
+        <div className="max-w-md mx-auto">
+          {/* Display artwork with frame if selected */}
+          <div
+            className={`inline-block mb-6 relative rounded-sm border-8`}
+            style={{ borderColor: frame?.color || 'transparent' }}
+          >
+            <img
+              src={artwork.imageUrl}
+              alt={artwork.title}
+              className="h-64 object-contain mx-auto"
+            />
+          </div>
             
             <h2 className="text-xl font-serif font-medium mb-2">{artwork.title}</h2>
             <p className="text-muted-foreground mb-4">by {artwork.artist}</p>
