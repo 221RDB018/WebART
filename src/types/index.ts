@@ -19,6 +19,9 @@ export interface Frame {
   previewUrl: string;
   price: number;
   color: string;
+  metalness: number;
+  roughness: number;
+  envMapIntensity: number;
 }
 
 export interface CartItem {
