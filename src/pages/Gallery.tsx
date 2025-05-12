@@ -1,15 +1,13 @@
 
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ArtworkCard from '../components/ArtworkCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Upload } from 'lucide-react';
 import { Artwork } from '../types';
-import { supabase } from '@/integrations/supabase/client';
-import { useQuery } from '@tanstack/react-query';
 import { useIsMobile } from '../hooks/use-mobile';
-import { artworks as localArtworks } from '../data/artworks'; // Import directly
+import { artworks as localArtworks } from '../data/artworks';
 
 const Gallery = () => {
   const navigate = useNavigate();
@@ -26,47 +24,10 @@ const Gallery = () => {
     { id: 'custom', name: 'My Uploads' }
   ];
 
-  const { data: artworks = [], isLoading, error } = useQuery({
-    queryKey: ['artworks'],
-    queryFn: async () => {
-      try {
-        const { data, error } = await supabase
-          .from('artworks')
-          .select('*');
-        
-        if (error) {
-          throw new Error(error.message);
-        }
-
-        // Return data from Supabase if available, otherwise return an empty array
-        return data ? data.map(artwork => ({
-          id: artwork.id.toString(), // Ensure ID is a string
-          title: artwork.title,
-          artist: artwork.artist,
-          description: artwork.description || '',
-          price: Number(artwork.price),
-          imageUrl: artwork.image_url,
-          dimensions: {
-            width: artwork.width,
-            height: artwork.height,
-          },
-          category: artwork.category
-        })) : [];
-      } catch (error) {
-        console.error("Error fetching artworks from Supabase:", error);
-        // Return empty array on error to avoid breaking the UI
-        return [];
-      }
-    },
-    // Don't keep retrying if there's an error
-    retry: 1,
-  });
-
-  // Use local data if Supabase fetch fails
-  // Ensure all local artwork IDs are strings
-  const allArtworks = artworks.length > 0 ? artworks : localArtworks.map(art => ({
+  // Use local data directly instead of fetching from Supabase
+  const allArtworks = localArtworks.map(art => ({
     ...art,
-    id: art.id.toString() // Convert all IDs to strings to ensure consistency
+    id: art.id.toString() // Ensure all IDs are strings for consistency
   }));
 
   const filteredArtworks = activeCategory === 'all' 
@@ -106,17 +67,8 @@ const Gallery = () => {
             </TabsList>
           </div>
           
-          {isLoading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
-              <p className="mt-4 text-muted-foreground">Loading artworks...</p>
-            </div>
-          ) : error ? (
-            <div className="text-center py-12 text-red-500">
-              <p>Error loading artworks. Please try again later.</p>
-            </div>
-          ) : (
-            categories.map(category => (
+          <div>
+            {categories.map(category => (
               <TabsContent key={category.id} value={category.id} className="animate-fade-in">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                   {filteredArtworks.map(artwork => (
@@ -138,8 +90,8 @@ const Gallery = () => {
                   </div>
                 )}
               </TabsContent>
-            ))
-          )}
+            ))}
+          </div>
         </Tabs>
       </div>
     </div>
