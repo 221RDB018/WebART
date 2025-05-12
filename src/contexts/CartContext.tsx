@@ -1,84 +1,107 @@
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { Artwork, CartItem, Frame } from "../types";
+import { getFrameById } from "../data/artworks";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { CartItem, Artwork, Frame } from '../types';
-import { getArtworkById, getFrameById } from '../data/artworks';
-import { toast } from 'sonner';
-
-interface CartContextType {
+interface CartContextProps {
   cartItems: CartItem[];
-  addToCart: (artwork: Artwork, frame: Frame | undefined, width: number, height: number) => void;
-  removeFromCart: (itemIndex: number) => void;
-  clearCart: () => void;
-  cartTotal: number;
   cartCount: number;
+  addToCart: (artwork: Artwork, frame?: Frame, customWidth?: number, customHeight?: number) => void;
+  removeFromCart: (artworkId: string, frameId?: string) => void;
+  clearCart: () => void;
+  increaseQuantity: (artworkId: string, frameId?: string) => void;
+  decreaseQuantity: (artworkId: string, frameId?: string) => void;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+const CartContext = createContext<CartContextProps | undefined>(undefined);
 
-export function CartProvider({ children }: { children: ReactNode }) {
+interface CartProviderProps {
+  children: ReactNode;
+}
+
+export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  const addToCart = (artwork: Artwork, frame: Frame | undefined, width: number, height: number) => {
-    const newItem: CartItem = {
-      artwork,
-      frame,
-      customDimensions: {
-        width,
-        height
-      },
-      quantity: 1
-    };
-    
-    setCartItems(prev => [...prev, newItem]);
-    toast.success(`${artwork.title} added to cart`);
+  const addToCart = (artwork: Artwork, frame?: Frame, customWidth: number = artwork.dimensions.width, customHeight: number = artwork.dimensions.height) => {
+    setCartItems((prevItems) => {
+      const existingItemIndex = prevItems.findIndex(
+        (item) => item.artwork.id === artwork.id && (frame ? item.frame?.id === frame.id : !item.frame) &&
+        item.customDimensions.width === customWidth && item.customDimensions.height === customHeight
+      );
+  
+      if (existingItemIndex !== -1) {
+        const newItems = [...prevItems];
+        newItems[existingItemIndex].quantity += 1;
+        return newItems;
+      } else {
+        const newItem: CartItem = {
+          artwork: artwork,
+          frame: frame,
+          customDimensions: {
+            width: customWidth,
+            height: customHeight,
+          },
+          quantity: 1,
+        };
+        return [...prevItems, newItem];
+      }
+    });
   };
 
-  const removeFromCart = (itemIndex: number) => {
-    setCartItems(prev => prev.filter((_, index) => index !== itemIndex));
-    toast.info("Item removed from cart");
+  const removeFromCart = (artworkId: string, frameId?: string) => {
+    setCartItems((prevItems) =>
+      prevItems.filter(item => !(item.artwork.id === artworkId && (frameId ? item.frame?.id === frameId : !item.frame)))
+    );
   };
 
   const clearCart = () => {
     setCartItems([]);
-    toast.info("Cart cleared");
   };
 
-  const cartTotal = cartItems.reduce((total, item) => {
-    const artworkPrice = item.artwork.price;
-    const framePrice = item.frame ? item.frame.price : 0;
-    
-    // Calculate price based on dimensions (simplified version)
-    const originalArea = item.artwork.dimensions.width * item.artwork.dimensions.height;
-    const customArea = item.customDimensions.width * item.customDimensions.height;
-    const sizeFactor = customArea / originalArea;
-    
-    const adjustedPrice = artworkPrice * sizeFactor;
-    
-    return total + (adjustedPrice + framePrice) * item.quantity;
-  }, 0);
+  const increaseQuantity = (artworkId: string, frameId?: string) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) => {
+        if (item.artwork.id === artworkId && (frameId ? item.frame?.id === frameId : !item.frame)) {
+          return { ...item, quantity: item.quantity + 1 };
+        }
+        return item;
+      })
+    );
+  };
 
-  const cartCount = cartItems.reduce((count, item) => count + item.quantity, 0);
+  const decreaseQuantity = (artworkId: string, frameId?: string) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) => {
+        if (item.artwork.id === artworkId && (frameId ? item.frame?.id === frameId : !item.frame) && item.quantity > 1) {
+          return { ...item, quantity: item.quantity - 1 };
+        }
+        return item;
+      })
+    );
+  };
+
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+  const value: CartContextProps = {
+    cartItems,
+    cartCount,
+    addToCart,
+    removeFromCart,
+    clearCart,
+    increaseQuantity,
+    decreaseQuantity,
+  };
 
   return (
-    <CartContext.Provider
-      value={{
-        cartItems,
-        addToCart,
-        removeFromCart,
-        clearCart,
-        cartTotal,
-        cartCount
-      }}
-    >
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );
-}
+};
 
-export function useCart() {
+export const useCart = () => {
   const context = useContext(CartContext);
   if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error("useCart must be used within a CartProvider");
   }
   return context;
-}
+};

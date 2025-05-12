@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ArtworkCard from '../components/ArtworkCard';
@@ -8,6 +9,7 @@ import { Artwork } from '../types';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { useIsMobile } from '../hooks/use-mobile';
+import { artworks as localArtworks } from '../data/artworks'; // Import directly instead of using require
 
 const Gallery = () => {
   const navigate = useNavigate();
@@ -61,7 +63,6 @@ const Gallery = () => {
   });
 
   // Use local data if Supabase fetch fails
-  const { artworks: localArtworks } = require('../data/artworks');
   const allArtworks = artworks.length > 0 ? artworks : localArtworks;
 
   const filteredArtworks = activeCategory === 'all' 
