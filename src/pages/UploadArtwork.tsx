@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -69,9 +68,8 @@ const UploadArtwork = () => {
       price,
       imageUrl,
       dimensions: {
-        // Convert cm to inches for internal storage
-        width: dimensions.width / 2.54,
-        height: dimensions.height / 2.54
+        width: dimensions.width,
+        height: dimensions.height
       },
       category: "custom"
     };

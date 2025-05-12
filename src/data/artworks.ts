@@ -10,8 +10,8 @@ export const artworks: Artwork[] = [
     price: 450,
     imageUrl: "/abstract-1.jpg",
     dimensions: {
-      width: 24,
-      height: 36,
+      width: 60,  // Now in cm (was 24 inches)
+      height: 90, // Now in cm (was 36 inches)
     },
     category: "abstract"
   },
@@ -23,8 +23,8 @@ export const artworks: Artwork[] = [
     price: 680,
     imageUrl: "/landscape-1.jpg",
     dimensions: {
-      width: 30,
-      height: 20,
+      width: 76, // Now in cm (was 30 inches)
+      height: 50, // Now in cm (was 20 inches)
     },
     category: "landscape"
   },
@@ -36,8 +36,8 @@ export const artworks: Artwork[] = [
     price: 350,
     imageUrl: "/urban-1.jpg",
     dimensions: {
-      width: 18,
-      height: 24,
+      width: 45, // Now in cm (was 18 inches)
+      height: 60, // Now in cm (was 24 inches)
     },
     category: "photography"
   },
@@ -49,8 +49,8 @@ export const artworks: Artwork[] = [
     price: 520,
     imageUrl: "/floral-1.jpg",
     dimensions: {
-      width: 16,
-      height: 20,
+      width: 40, // Now in cm (was 16 inches)
+      height: 50, // Now in cm (was 20 inches)
     },
     category: "floral"
   },
@@ -62,8 +62,8 @@ export const artworks: Artwork[] = [
     price: 790,
     imageUrl: "/portrait-1.jpg",
     dimensions: {
-      width: 24,
-      height: 30,
+      width: 60, // Now in cm (was 24 inches)
+      height: 76, // Now in cm (was 30 inches)
     },
     category: "portrait"
   },
@@ -75,8 +75,8 @@ export const artworks: Artwork[] = [
     price: 410,
     imageUrl: "/abstract-2.jpg",
     dimensions: {
-      width: 24,
-      height: 24,
+      width: 60, // Now in cm (was 24 inches)
+      height: 60, // Now in cm (was 24 inches)
     },
     category: "abstract"
   }

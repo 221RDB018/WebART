@@ -17,36 +17,31 @@ const ArtworkDetail = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
 
-  // Make sure to work with string IDs
   const artwork = id ? getArtworkById(id.toString()) : undefined;
 
-  // Convert inches to cm for display
-  const initialWidthInCm = artwork ? Math.round(artwork.dimensions.width * 2.54) : 60;
-  const initialHeightInCm = artwork ? Math.round(artwork.dimensions.height * 2.54) : 90;
-
   const [selectedFrame, setSelectedFrame] = useState<Frame | undefined>(undefined);
-  const [customWidth, setCustomWidth] = useState(initialWidthInCm);
-  const [customHeight, setCustomHeight] = useState(initialHeightInCm);
+  const [customWidth, setCustomWidth] = useState(artwork ? artwork.dimensions.width : 60);
+  const [customHeight, setCustomHeight] = useState(artwork ? artwork.dimensions.height : 90);
 
   // Calculate min and max dimensions in centimeters
   const minWidthInCm = useMemo(() => {
     if (!artwork) return 20;
-    return Math.max(20, Math.floor(artwork.dimensions.width * 2.54 * 0.5));
+    return Math.max(20, Math.floor(artwork.dimensions.width * 0.5));
   }, [artwork]);
 
   const maxWidthInCm = useMemo(() => {
     if (!artwork) return 150;
-    return Math.ceil(artwork.dimensions.width * 2.54 * 2);
+    return Math.ceil(artwork.dimensions.width * 2);
   }, [artwork]);
 
   const minHeightInCm = useMemo(() => {
     if (!artwork) return 20;
-    return Math.max(20, Math.floor(artwork.dimensions.height * 2.54 * 0.5));
+    return Math.max(20, Math.floor(artwork.dimensions.height * 0.5));
   }, [artwork]);
 
   const maxHeightInCm = useMemo(() => {
     if (!artwork) return 150;
-    return Math.ceil(artwork.dimensions.height * 2.54 * 2);
+    return Math.ceil(artwork.dimensions.height * 2);
   }, [artwork]);
 
   if (!artwork) {
@@ -60,12 +55,8 @@ const ArtworkDetail = () => {
     );
   }
 
-  const handleAddToCart = () => {
-    // Convert cm back to inches for storage
-    const widthInInches = customWidth / 2.54;
-    const heightInInches = customHeight / 2.54;
-    
-    addToCart(artwork, selectedFrame, widthInInches, heightInInches);
+  const handleAddToCart = () => {    
+    addToCart(artwork, selectedFrame, customWidth, customHeight);
   };
 
   const handleFrameSelect = (frameId: string) => {
@@ -73,9 +64,8 @@ const ArtworkDetail = () => {
     setSelectedFrame(frame);
   };
 
-  // Calculate price based on dimensions (simplified version)
-  // Original dimensions in inches converted to cm for proper ratio calculation
-  const originalArea = (artwork.dimensions.width * 2.54) * (artwork.dimensions.height * 2.54);
+  // Calculate price based on dimensions
+  const originalArea = artwork.dimensions.width * artwork.dimensions.height;
   const customArea = customWidth * customHeight;
   const sizeFactor = customArea / originalArea;
   
@@ -172,7 +162,7 @@ const ArtworkDetail = () => {
                   <div className="flex justify-between mb-2">
                     <Label htmlFor="width-slider">Width: {customWidth} cm</Label>
                     <span className="text-sm text-muted-foreground">
-                      Original: {Math.round(artwork.dimensions.width * 2.54)} cm
+                      Original: {artwork.dimensions.width} cm
                     </span>
                   </div>
                   <Slider
@@ -189,7 +179,7 @@ const ArtworkDetail = () => {
                   <div className="flex justify-between mb-2">
                     <Label htmlFor="height-slider">Height: {customHeight} cm</Label>
                     <span className="text-sm text-muted-foreground">
-                      Original: {Math.round(artwork.dimensions.height * 2.54)} cm
+                      Original: {artwork.dimensions.height} cm
                     </span>
                   </div>
                   <Slider
