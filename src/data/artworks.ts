@@ -1,4 +1,3 @@
-
 import { Artwork, Frame } from "../types";
 
 export const artworks: Artwork[] = [
@@ -137,8 +136,4 @@ export const frames: Frame[] = [
 
 export const getArtworkById = (id: string): Artwork | undefined => {
   return artworks.find(artwork => artwork.id === id);
-};
-
-export const getFrameById = (id: string): Frame | undefined => {
-  return frames.find(frame => frame.id === id);
 };

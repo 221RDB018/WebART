@@ -1,73 +1,86 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Image } from "lucide-react";
 import { artworks } from "../data/artworks";
 import ArtworkCard from "../components/ArtworkCard";
+import { useIsMobile } from "../hooks/use-mobile";
 
 const Index = () => {
   const featuredArtworks = artworks.slice(0, 3);
+  const isMobile = useIsMobile();
   
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-art-light py-16 md:py-24">
+      <section className="relative bg-art-light py-12 md:py-24">
         <div className="art-container">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
             <div className="text-center md:text-left">
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold mb-4 leading-tight">
+              <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl font-semibold mb-4 leading-tight">
                 Find Art That Speaks <span className="text-art-purple">To You</span>
               </h1>
-              <p className="text-lg mb-8 text-muted-foreground max-w-md md:mx-0 mx-auto">
+              <p className="text-lg mb-6 text-muted-foreground max-w-md md:mx-0 mx-auto px-4 md:px-0">
                 Discover unique artworks from talented artists and customize them to perfectly fit your space.
               </p>
               <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-                <Button asChild size="lg" className="px-8">
+                <Button asChild size="lg" className="px-6 md:px-8">
                   <Link to="/gallery">Explore Gallery</Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="px-8">
+                <Button asChild size="lg" variant="outline" className="px-6 md:px-8">
                   <Link to="/about">Learn More</Link>
                 </Button>
               </div>
             </div>
-            <div className="relative hidden md:block">
-              <div className="absolute -top-6 -left-6 w-64 h-64 bg-white rounded-lg shadow-lg overflow-hidden">
-                <img 
-                  src="/abstract-1.jpg" 
-                  alt="Abstract artwork" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute top-12 left-32 w-72 h-72 bg-white rounded-lg shadow-lg overflow-hidden z-10">
-                <img 
-                  src="/landscape-1.jpg" 
-                  alt="Landscape artwork" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-6 left-12 w-56 h-56 bg-white rounded-lg shadow-lg overflow-hidden">
-                <img 
-                  src="/portrait-1.jpg" 
-                  alt="Portrait artwork" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
+            <div className={`relative ${isMobile ? 'mt-8 flex justify-center' : 'hidden md:block'}`}>
+              {isMobile ? (
+                <div className="relative w-64 h-64">
+                  <img 
+                    src="/abstract-1.jpg" 
+                    alt="Artwork showcase" 
+                    className="w-full h-full object-cover rounded-lg shadow-lg"
+                  />
+                </div>
+              ) : (
+                <>
+                  <div className="absolute -top-6 -left-6 w-64 h-64 bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img 
+                      src="/abstract-1.jpg" 
+                      alt="Abstract artwork" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute top-12 left-32 w-72 h-72 bg-white rounded-lg shadow-lg overflow-hidden z-10">
+                    <img 
+                      src="/landscape-1.jpg" 
+                      alt="Landscape artwork" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute -bottom-6 left-12 w-56 h-56 bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img 
+                      src="/portrait-1.jpg" 
+                      alt="Portrait artwork" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section className="py-16 md:py-24">
-        <div className="art-container">
-          <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl md:text-4xl font-medium mb-4">How It Works</h2>
+      <section className="py-12 md:py-24">
+        <div className="art-container px-4 md:px-8">
+          <div className="text-center mb-10">
+            <h2 className="font-serif text-2xl md:text-4xl font-medium mb-4">How It Works</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Our platform makes it easy to find the perfect artwork for your space and customize it to your exact specifications.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
             <div className="bg-white rounded-lg p-6 text-center shadow-sm border">
               <div className="inline-flex items-center justify-center rounded-full bg-art-light h-16 w-16 mb-4">
                 <Image className="h-8 w-8 text-art-purple" />
@@ -107,16 +120,16 @@ const Index = () => {
       </section>
       
       {/* Featured Artwork Section */}
-      <section className="bg-white py-16 md:py-24">
-        <div className="art-container">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="font-serif text-3xl font-medium">Featured Artwork</h2>
-            <Link to="/gallery" className="text-art-purple hover:underline flex items-center gap-1">
+      <section className="bg-white py-12 md:py-24">
+        <div className="art-container px-4 md:px-8">
+          <div className="flex justify-between items-center mb-6 md:mb-8">
+            <h2 className="font-serif text-2xl md:text-3xl font-medium">Featured Artwork</h2>
+            <Link to="/gallery" className="text-art-purple hover:underline flex items-center gap-1 text-sm md:text-base">
               View all <ArrowRight size={16} />
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {featuredArtworks.map(artwork => (
               <ArtworkCard key={artwork.id} artwork={artwork} />
             ))}
@@ -125,16 +138,16 @@ const Index = () => {
       </section>
       
       {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-art-purple/10">
-        <div className="art-container">
+      <section className="py-12 md:py-24 bg-art-purple/10">
+        <div className="art-container px-4 md:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-serif text-3xl md:text-4xl font-medium mb-4">
+            <h2 className="font-serif text-2xl md:text-4xl font-medium mb-4">
               Ready to Transform Your Space?
             </h2>
-            <p className="text-muted-foreground mb-8 text-lg">
+            <p className="text-muted-foreground mb-6 md:mb-8 text-base md:text-lg">
               Explore our curated collection of artwork and find the perfect piece for your home or office.
             </p>
-            <Button asChild size="lg" className="px-8">
+            <Button asChild size="lg" className="px-6 md:px-8">
               <Link to="/gallery">Browse Gallery</Link>
             </Button>
           </div>
