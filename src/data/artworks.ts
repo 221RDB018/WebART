@@ -136,9 +136,9 @@ export const frames: Frame[] = [
 ];
 
 export const getArtworkById = (id: string): Artwork | undefined => {
-  return artworks.find(artwork => artwork.id === id);
+  return artworks.find(artwork => artwork.id.toString() === id.toString());
 };
 
 export const getFrameById = (id: string): Frame | undefined => {
-  return frames.find(frame => frame.id === id);
+  return frames.find(frame => frame.id.toString() === id.toString());
 };

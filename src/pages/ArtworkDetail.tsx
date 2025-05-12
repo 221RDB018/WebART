@@ -17,7 +17,8 @@ const ArtworkDetail = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
 
-  const artwork = id ? getArtworkById(id) : undefined;
+  // Make sure to work with string IDs
+  const artwork = id ? getArtworkById(id.toString()) : undefined;
 
   // Convert inches to cm for display
   const initialWidthInCm = artwork ? Math.round(artwork.dimensions.width * 2.54) : 60;

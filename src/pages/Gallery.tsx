@@ -9,7 +9,7 @@ import { Artwork } from '../types';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { useIsMobile } from '../hooks/use-mobile';
-import { artworks as localArtworks } from '../data/artworks'; // Import directly instead of using require
+import { artworks as localArtworks } from '../data/artworks'; // Import directly
 
 const Gallery = () => {
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ const Gallery = () => {
 
         // Return data from Supabase if available, otherwise return an empty array
         return data ? data.map(artwork => ({
-          id: artwork.id,
+          id: artwork.id.toString(), // Ensure ID is a string
           title: artwork.title,
           artist: artwork.artist,
           description: artwork.description || '',
@@ -63,7 +63,11 @@ const Gallery = () => {
   });
 
   // Use local data if Supabase fetch fails
-  const allArtworks = artworks.length > 0 ? artworks : localArtworks;
+  // Ensure all local artwork IDs are strings
+  const allArtworks = artworks.length > 0 ? artworks : localArtworks.map(art => ({
+    ...art,
+    id: art.id.toString() // Convert all IDs to strings to ensure consistency
+  }));
 
   const filteredArtworks = activeCategory === 'all' 
     ? allArtworks 

@@ -9,8 +9,8 @@ interface ArtworkCardProps {
 }
 
 const ArtworkCard = ({ artwork }: ArtworkCardProps) => {
-  // Ensure the ID is valid and convert to string if needed
-  const artworkId = artwork.id ? artwork.id.toString() : "";
+  // Always ensure the ID is a string
+  const artworkId = artwork.id.toString();
   
   return (
     <Link to={`/artwork/${artworkId}`} className="group block">

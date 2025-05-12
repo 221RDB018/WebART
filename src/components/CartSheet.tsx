@@ -6,7 +6,13 @@ import { formatCurrency } from "../utils/formatters";
 import { ShoppingCart, X } from "lucide-react";
 
 const CartSheet = () => {
-  const { cartItems, removeFromCart, clearCart, cartTotal } = useCart();
+  const { cartItems, removeFromCart, clearCart } = useCart();
+  
+  // Calculate cart total
+  const cartTotal = cartItems.reduce((total, item) => {
+    const itemPrice = item.artwork.price + (item.frame ? item.frame.price : 0);
+    return total + (itemPrice * item.quantity);
+  }, 0);
 
   if (cartItems.length === 0) {
     return (
@@ -50,7 +56,7 @@ const CartSheet = () => {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8"
-                onClick={() => removeFromCart(index)}
+                onClick={() => removeFromCart(item.artwork.id, item.frame?.id)}
               >
                 <X className="h-4 w-4" />
               </Button>

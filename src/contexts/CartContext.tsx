@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Artwork, CartItem, Frame } from "../types";
 import { getFrameById } from "../data/artworks";
@@ -24,8 +25,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const addToCart = (artwork: Artwork, frame?: Frame, customWidth: number = artwork.dimensions.width, customHeight: number = artwork.dimensions.height) => {
     setCartItems((prevItems) => {
       const existingItemIndex = prevItems.findIndex(
-        (item) => item.artwork.id === artwork.id && (frame ? item.frame?.id === frame.id : !item.frame) &&
-        item.customDimensions.width === customWidth && item.customDimensions.height === customHeight
+        (item) => item.artwork.id.toString() === artwork.id.toString() && 
+        (frame ? item.frame?.id.toString() === frame.id.toString() : !item.frame) &&
+        item.customDimensions.width === customWidth && 
+        item.customDimensions.height === customHeight
       );
   
       if (existingItemIndex !== -1) {
@@ -34,7 +37,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         return newItems;
       } else {
         const newItem: CartItem = {
-          artwork: artwork,
+          artwork: {
+            ...artwork,
+            id: artwork.id.toString() // Ensure ID is string
+          },
           frame: frame,
           customDimensions: {
             width: customWidth,
@@ -49,7 +55,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   const removeFromCart = (artworkId: string, frameId?: string) => {
     setCartItems((prevItems) =>
-      prevItems.filter(item => !(item.artwork.id === artworkId && (frameId ? item.frame?.id === frameId : !item.frame)))
+      prevItems.filter(item => 
+        !(item.artwork.id.toString() === artworkId.toString() && 
+        (frameId ? item.frame?.id.toString() === frameId.toString() : !item.frame))
+      )
     );
   };
 
@@ -60,7 +69,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const increaseQuantity = (artworkId: string, frameId?: string) => {
     setCartItems((prevItems) =>
       prevItems.map((item) => {
-        if (item.artwork.id === artworkId && (frameId ? item.frame?.id === frameId : !item.frame)) {
+        if (item.artwork.id.toString() === artworkId.toString() && 
+            (frameId ? item.frame?.id.toString() === frameId.toString() : !item.frame)) {
           return { ...item, quantity: item.quantity + 1 };
         }
         return item;
@@ -71,7 +81,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const decreaseQuantity = (artworkId: string, frameId?: string) => {
     setCartItems((prevItems) =>
       prevItems.map((item) => {
-        if (item.artwork.id === artworkId && (frameId ? item.frame?.id === frameId : !item.frame) && item.quantity > 1) {
+        if (item.artwork.id.toString() === artworkId.toString() && 
+            (frameId ? item.frame?.id.toString() === frameId.toString() : !item.frame) && 
+            item.quantity > 1) {
           return { ...item, quantity: item.quantity - 1 };
         }
         return item;
