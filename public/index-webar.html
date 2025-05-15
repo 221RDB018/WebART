@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -6,34 +7,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebAR Paintings</title>
     <style>
-      body { margin: 0; overflow: hidden; background: black; font-family: Arial, sans-serif; }
+      body { 
+        margin: 0; 
+        overflow: hidden; 
+        background: #111; 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
+      }
+      
       #loading-message {
         position: absolute;
         top: 50%; left: 50%; transform: translate(-50%, -50%);
         background: rgba(0,0,0,0.7); color: white;
-        padding: 15px; border-radius: 10px; font-size: 16px;
+        padding: 16px 24px; border-radius: 12px; font-size: 18px;
+        text-align: center; max-width: 80%;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       }
+      
       #ar-failure {
-        display: none; position: absolute; bottom: 50px;
+        display: none; 
+        position: absolute; bottom: 50px;
         left: 50%; transform: translateX(-50%);
-        background: red; color: white; padding: 10px; border-radius: 5px;
+        background: #e53935; color: white; padding: 10px 16px; 
+        border-radius: 8px; font-size: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       }
-      #image-upload {
-        position: absolute; top: 10px; left: 10px; z-index: 10;
-        background: rgba(255,255,255,0.8); padding: 5px; border-radius: 5px;
-      }
+      
       #timer-display {
-        position: absolute; top: 10px; right: 10px; z-index: 10;
-        background: rgba(255,255,255,0.8); padding: 5px; border-radius: 5px;
-        color: black; font-weight: bold;
+        position: absolute; top: 16px; right: 16px; z-index: 10;
+        background: rgba(255,255,255,0.2); padding: 8px 12px; border-radius: 8px;
+        color: white; font-weight: bold; backdrop-filter: blur(4px);
+      }
+      
+      #back-button {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 20;
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        backdrop-filter: blur(4px);
+        transition: background 0.2s ease;
+      }
+      
+      #back-button:hover {
+        background: rgba(255,255,255,0.3);
+      }
+      
+      #back-button svg {
+        margin-right: 6px;
+      }
+      
+      #instruction-box {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.7);
+        padding: 12px 18px;
+        border-radius: 12px;
+        text-align: center;
+        max-width: 80%;
+        font-size: 14px;
+        color: white;
+        opacity: 0.8;
       }
     </style>
   </head>
   <body>
-    <input type="file" id="image-upload" accept="image/*">
+    <button id="back-button" onclick="goBack()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Back
+    </button>
+    
     <div id="loading-message">Move your phone to detect a wall</div>
     <div id="ar-failure">AR is not tracking</div>
     <div id="timer-display"></div>
+    <div id="instruction-box">Tap once to place artwork. Tap on the artwork to adjust position.</div>
+    
     <script type="importmap">
       { "imports": { "three": "https://threejs.org/build/three.module.js" } }
     </script>
@@ -44,6 +104,11 @@ import { RGBELoader } from 'https://threejs.org/examples/jsm/loaders/RGBELoader.
 import { TransformControls } from 'https://threejs.org/examples/jsm/controls/TransformControls.js';
 import { XREstimatedLight } from 'https://threejs.org/examples/jsm/webxr/XREstimatedLight.js';
 
+// Function to go back to previous page
+window.goBack = function() {
+  window.history.back();
+};
+
 let scene, camera, renderer;
 let model, hitTestSource = null, hitTestSourceRequested = false;
 let placed = false;
@@ -52,12 +117,12 @@ let controls, raycaster;
 let defaultEnvironment;
 let controlsVisible = false;
 
-// Получаем параметры из URL
+// Get parameters from URL
 const urlParams = new URLSearchParams(window.location.search);
 const artworkId = urlParams.get('artworkId');
 const frameId = urlParams.get('frameId');
 
-// Инициализируем данные из artworks.ts
+// Initialize data from artworks.ts
 const initialArtworks = {
   "1": {
     id: "1",
@@ -103,17 +168,17 @@ const initialArtworks = {
   }
 };
 
-// Получаем данные о картинах из localStorage или используем начальные данные
+// Get artwork data from localStorage or use initial data
 let artworks = JSON.parse(localStorage.getItem('webarArtworks') || '{}');
 console.log(artworks);
 
-// Если в localStorage нет данных или они устарели, используем начальные данные
+// If there's no data in localStorage or it's outdated, use initial data
 if (Object.keys(artworks).length === 0 || !artworks["1"]) {
   artworks = initialArtworks;
   localStorage.setItem('webarArtworks', JSON.stringify(artworks));
 }
 
-// Данные о рамках
+// Frame data
 const frames = {
   "frame-1": {
     id: "frame-1",
@@ -157,7 +222,7 @@ const frames = {
   }
 };
 
-// Получаем данные о картине и рамке
+// Get artwork and frame data
 function getArtworkData() {
   const artwork = artworks[artworkId];
   const frame = frameId ? frames[frameId] : null;
@@ -172,16 +237,16 @@ function getArtworkData() {
 function createArtworkModel(artwork, frame) {
   const group = new THREE.Group();
   
-  // Получаем размеры из URL параметров или используем оригинальные размеры
+  // Get dimensions from URL parameters or use original dimensions
   const customWidth = urlParams.get('width') ? parseFloat(urlParams.get('width')) : artwork.dimensions.width;
   const customHeight = urlParams.get('height') ? parseFloat(urlParams.get('height')) : artwork.dimensions.height;
   
-  // Конвертируем размеры из см в метры
+  // Convert dimensions from cm to meters
   const width = customWidth / 100;
   const height = customHeight / 100;
   console.log('Custom dimensions:', width, height);
   
-  // Создаем картину
+  // Create painting
   const paintingGeometry = new THREE.PlaneGeometry(width, height);
   const texture = new THREE.TextureLoader().load(artwork.imageUrl);
   const paintingMaterial = new THREE.MeshStandardMaterial({
@@ -194,10 +259,10 @@ function createArtworkModel(artwork, frame) {
   painting.name = 'painting';
   group.add(painting);
   
-  // Создаем рамку если она выбрана
+  // Create frame if selected
   if (frame) {
-    const frameThickness = 0.02; // 2 см
-    const frameDepth = 0.015;    // 1.5 см
+    const frameThickness = 0.02; // 2 cm
+    const frameDepth = 0.015;    // 1.5 cm
     
     const frameMaterial = new THREE.MeshStandardMaterial({
       color: frame.color,
@@ -212,7 +277,7 @@ function createArtworkModel(artwork, frame) {
       return mesh;
     }
     
-    // Создаем части рамки с учетом размеров картины
+    // Create frame parts based on painting dimensions
     const topFrame = createFramePiece(width + frameThickness * 2, frameThickness, frameDepth, height/2 + frameThickness/2);
     const bottomFrame = createFramePiece(width + frameThickness * 2, frameThickness, frameDepth, -height/2 - frameThickness/2);
     const leftFrame = createFramePiece(frameThickness, height + frameThickness * 2, frameDepth, 0, -width/2 - frameThickness/2);
@@ -228,8 +293,12 @@ function createArtworkModel(artwork, frame) {
 }
 
 async function init() {
-  // Загружаем данные
+  // Load data
   const { artwork, frame } = await getArtworkData();
+  
+  // Update loading message with artwork info
+  const loadingMessage = document.getElementById('loading-message');
+  loadingMessage.innerHTML = `Move your phone to place<br>"${artwork.title}"<br>by ${artwork.artist}`;
   
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 10);
@@ -259,7 +328,7 @@ async function init() {
   defaultLight.position.set(0.5, 1, 0.25);
   scene.add(defaultLight);
 
-  // Создаем модель с учетом данных о картине и рамке
+  // Create model with artwork and frame data
   model = createArtworkModel(artwork, frame);
   model.visible = false;
   scene.add(model);
@@ -289,15 +358,14 @@ async function init() {
 
   renderer.setAnimationLoop(render);
   window.addEventListener('resize', onWindowResize);
-  
-//   // Инициализация элемента отображения таймера
-//   timerDisplay = document.getElementById('timer-display');
-//   timerDisplay.textContent = 'Время: 0.000 сек';
-
 }
 
 function onSelect() {
   if (!placed) {
+    // Hide loading message when artwork is placed
+    document.getElementById('loading-message').style.display = 'none';
+    document.getElementById('instruction-box').textContent = 'Tap on the artwork to move, rotate, or scale it';
+    
     model.visible = true;
     model.position.set(0,1,-1).applyMatrix4(camera.matrixWorld);
     model.quaternion.copy(camera.quaternion);
@@ -305,10 +373,6 @@ function onSelect() {
     controls.attach(model);
     controls.visible = false;
     controlsVisible = false;
-    
-    // const placementTime = performance.now() - appStartTime;
-    // console.log(`Время размещения модели: ${placementTime.toFixed(3)} мс`);
-    // timerDisplay.textContent = `Время: ${(placementTime/1000).toFixed(3)} сек`;
   } else {
     raycaster.setFromXRController(controller);
     const intersects = raycaster.intersectObject(model, true);
@@ -316,10 +380,12 @@ function onSelect() {
       controls.attach(model);
       controls.visible = true;
       controlsVisible = true;
+      document.getElementById('instruction-box').textContent = 'Drag handles to adjust position, rotation, and scale';
     } else {
       controls.detach();
       controls.visible = false;
       controlsVisible = false;
+      document.getElementById('instruction-box').textContent = 'Tap on the artwork to move, rotate, or scale it';
     }
   }
 }
@@ -356,9 +422,9 @@ function render(timestamp, frame) {
           model.position.copy(pose.transform.position);
           placed = true;
           
-          // const placementTime = performance.now() - appStartTime;
-          // console.log(`Время до размещения модели через hit-test: ${placementTime.toFixed(3)} мс`);
-          // timerDisplay.textContent = `Время: ${(placementTime/1000).toFixed(3)} сек`;
+          // Hide loading message when artwork is placed
+          document.getElementById('loading-message').style.display = 'none';
+          document.getElementById('instruction-box').textContent = 'Tap on the artwork to move, rotate, or scale it';
         }
       }
     }
