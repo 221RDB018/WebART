@@ -1,4 +1,3 @@
-
 import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
@@ -20,28 +19,28 @@ const ArtworkDetail = () => {
   const artwork = id ? getArtworkById(id.toString()) : undefined;
 
   const [selectedFrame, setSelectedFrame] = useState<Frame | undefined>(undefined);
-  const [customWidth, setCustomWidth] = useState(artwork ? artwork.dimensions.width : 60);
-  const [customHeight, setCustomHeight] = useState(artwork ? artwork.dimensions.height : 90);
+  const [scale, setScale] = useState(1);
 
-  // Calculate min and max dimensions in centimeters
-  const minWidthInCm = useMemo(() => {
-    if (!artwork) return 20;
-    return Math.max(20, Math.floor(artwork.dimensions.width * 0.5));
+  // Calculate dimensions based on scale
+  const customWidth = useMemo(() => {
+    if (!artwork) return 60;
+    return Math.round(artwork.dimensions.width * scale);
+  }, [artwork, scale]);
+
+  const customHeight = useMemo(() => {
+    if (!artwork) return 90;
+    return Math.round(artwork.dimensions.height * scale);
+  }, [artwork, scale]);
+
+  // Calculate min and max scale
+  const minScale = useMemo(() => {
+    if (!artwork) return 0.5;
+    return 0.5;
   }, [artwork]);
 
-  const maxWidthInCm = useMemo(() => {
-    if (!artwork) return 150;
-    return Math.ceil(artwork.dimensions.width * 2);
-  }, [artwork]);
-
-  const minHeightInCm = useMemo(() => {
-    if (!artwork) return 20;
-    return Math.max(20, Math.floor(artwork.dimensions.height * 0.5));
-  }, [artwork]);
-
-  const maxHeightInCm = useMemo(() => {
-    if (!artwork) return 150;
-    return Math.ceil(artwork.dimensions.height * 2);
+  const maxScale = useMemo(() => {
+    if (!artwork) return 2;
+    return 2;
   }, [artwork]);
 
   if (!artwork) {
@@ -155,40 +154,23 @@ const ArtworkDetail = () => {
             </div>
             
             <div className="mb-6">
-              <h2 className="font-semibold mb-4">Customize Dimensions</h2>
+              <h2 className="font-semibold mb-4">Customize Size</h2>
               
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between mb-2">
-                    <Label htmlFor="width-slider">Width: {customWidth} cm</Label>
+                    <Label htmlFor="size-slider">Size: {customWidth} × {customHeight} cm</Label>
                     <span className="text-sm text-muted-foreground">
-                      Original: {artwork.dimensions.width} cm
+                      Original: {artwork.dimensions.width} × {artwork.dimensions.height} cm
                     </span>
                   </div>
                   <Slider
-                    id="width-slider"
-                    min={minWidthInCm}
-                    max={maxWidthInCm}
-                    step={1}
-                    value={[customWidth]}
-                    onValueChange={(value) => setCustomWidth(value[0])}
-                  />
-                </div>
-                
-                <div>
-                  <div className="flex justify-between mb-2">
-                    <Label htmlFor="height-slider">Height: {customHeight} cm</Label>
-                    <span className="text-sm text-muted-foreground">
-                      Original: {artwork.dimensions.height} cm
-                    </span>
-                  </div>
-                  <Slider
-                    id="height-slider"
-                    min={minHeightInCm}
-                    max={maxHeightInCm}
-                    step={1}
-                    value={[customHeight]}
-                    onValueChange={(value) => setCustomHeight(value[0])}
+                    id="size-slider"
+                    min={minScale}
+                    max={maxScale}
+                    step={0.1}
+                    value={[scale]}
+                    onValueChange={(value) => setScale(value[0])}
                   />
                 </div>
               </div>
@@ -225,7 +207,15 @@ const ArtworkDetail = () => {
                 size="lg"
                 variant="outline"
                 className="w-full sm:w-1/3"
-                onClick={() => navigate('/ar-preview/' + artwork.id + (selectedFrame ? `?frame=${selectedFrame.id}` : ''))}
+                onClick={() => {
+                  const params = new URLSearchParams();
+                  if (selectedFrame) {
+                    params.set('frameId', selectedFrame.id);
+                  }
+                  params.set('width', customWidth.toString());
+                  params.set('height', customHeight.toString());
+                  navigate(`/ar-preview/${artwork.id}?${params.toString()}`);
+                }}
               >
                 AR Preview
               </Button>

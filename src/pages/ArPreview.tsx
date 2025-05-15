@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { getArtworkById, getFrameById } from "../data/artworks";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,9 @@ const ArPreview = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const frameId = searchParams.get('frame');
+  const frameId = searchParams.get('frameId');
+  const width = searchParams.get('width');
+  const height = searchParams.get('height');
 
   const artwork = id ? getArtworkById(id) : undefined;
   const frame = frameId ? getFrameById(frameId) : undefined;
@@ -39,7 +40,7 @@ const ArPreview = () => {
         <div className="text-center mb-8">
           <h1 className="text-3xl md:text-4xl font-serif mb-4">WebAR Experience</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            This feature will allow you to visualize "{artwork.title}" on your wall using augmented reality. Coming soon!
+            This feature will allow you to visualize "{artwork.title}" on your wall using augmented reality.
           </p>
         </div>
         
@@ -65,21 +66,32 @@ const ArPreview = () => {
             )}
             
             <Button 
-              disabled
+              onClick={() => {
+                const params = new URLSearchParams();
+                params.set('artworkId', artwork.id);
+                if (frame) {
+                  params.set('frameId', frame.id);
+                }
+                if (width) {
+                  params.set('width', width);
+                }
+                if (height) {
+                  params.set('height', height);
+                }
+                window.location.href = `/index-webar.html?${params.toString()}`;
+              }}
               className="w-full mb-3"
               variant="default"
             >
               Launch WebAR Experience
             </Button>
-            <p className="text-sm text-muted-foreground">
-              WebAR functionality will be implemented in a future update. This placeholder demonstrates how the feature will integrate into your art selection process.
-            </p>
+
           </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="font-serif text-xl mb-4">How it will work</h3>
+            <h3 className="font-serif text-xl mb-4">How it works</h3>
             <ul className="space-y-2">
               <li className="flex items-start">
                 <span className="inline-flex items-center justify-center rounded-full bg-art-light h-6 w-6 mr-3 text-sm font-medium">1</span>
@@ -101,7 +113,7 @@ const ArPreview = () => {
           </div>
           
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="font-serif text-xl mb-4">Coming Soon</h3>
+            {/* <h3 className="font-serif text-xl mb-4">Coming Soon</h3> */}
             <p className="mb-4">Our WebAR experience will let you:</p>
             <ul className="space-y-2 mb-4">
               <li className="flex items-start">
@@ -114,11 +126,13 @@ const ArPreview = () => {
               </li>
               <li className="flex items-start">
                 <span className="mr-2">✓</span>
-                <span>Take photos to save or share with others</span>
+                {/* <span>Take photos to save or share with others</span> */}
+                <span>Upload your own image from your phone gallery</span>
               </li>
               <li className="flex items-start">
                 <span className="mr-2">✓</span>
-                <span>Compare multiple artworks side by side</span>
+                {/* <span>Compare multiple artworks side by side</span> */}
+                <span>Customize artwork size and frame style before placing</span>
               </li>
             </ul>
             <Button

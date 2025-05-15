@@ -138,14 +138,14 @@ const Navbar = () => {
               <Link to="/gallery" className="font-medium py-2 hover:text-art-purple transition-colors">
                 Gallery
               </Link>
-              <Separator />
+              {/* <Separator />
               <Link to="/about" className="font-medium py-2 hover:text-art-purple transition-colors">
                 About
               </Link>
               <Separator />
               <Link to="/contact" className="font-medium py-2 hover:text-art-purple transition-colors">
                 Contact
-              </Link>
+              </Link> */}
               {!user && (
                 <>
                   <Separator />

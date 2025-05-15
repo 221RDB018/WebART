@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArtworkCard from '../components/ArtworkCard';
@@ -42,13 +41,15 @@ const Gallery = () => {
           <p className="text-muted-foreground max-w-2xl mx-auto mb-5 px-4">
             Explore our curated collection of unique artworks from talented artists around the world.
           </p>
-          <Button 
-            onClick={() => navigate('/upload-artwork')} 
-            className="flex items-center gap-2"
-          >
-            <Upload size={18} />
-            Upload Your Artwork
-          </Button>
+          <div className="flex justify-center">
+            <Button 
+              onClick={() => navigate('/upload-artwork')} 
+              className="flex items-center gap-2"
+            >
+              <Upload size={18} />
+              Upload Your Artwork
+            </Button>
+          </div>
         </div>
 
         <Tabs defaultValue="all" className="mb-6">
@@ -79,13 +80,15 @@ const Gallery = () => {
                   <div className="text-center py-12">
                     <p className="text-muted-foreground mb-4">No artworks found in this category.</p>
                     {category.id === 'custom' && (
-                      <Button 
-                        onClick={() => navigate('/upload-artwork')} 
-                        className="flex items-center gap-2"
-                      >
-                        <Upload size={18} />
-                        Upload Your First Artwork
-                      </Button>
+                      <div className="flex justify-center">
+                        <Button 
+                          onClick={() => navigate('/upload-artwork')} 
+                          className="flex items-center gap-2"
+                        >
+                          <Upload size={18} />
+                          Upload Your First Artwork
+                        </Button>
+                      </div>
                     )}
                   </div>
                 )}

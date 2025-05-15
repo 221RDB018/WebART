@@ -26,9 +26,9 @@ const Index = () => {
                 <Button asChild size="lg" className="px-6 md:px-8">
                   <Link to="/gallery">Explore Gallery</Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="px-6 md:px-8">
+                {/* <Button asChild size="lg" variant="outline" className="px-6 md:px-8">
                   <Link to="/about">Learn More</Link>
-                </Button>
+                </Button> */}
               </div>
             </div>
             <div className={`relative ${isMobile ? 'mt-8 flex justify-center' : 'hidden md:block'}`}>
@@ -112,7 +112,7 @@ const Index = () => {
               </div>
               <h3 className="font-serif text-xl mb-3">Visualize</h3>
               <p className="text-muted-foreground">
-                Preview how the artwork will look in your space with our WebAR technology (coming soon).
+                Preview how the artwork will look in your space with our WebAR technology.
               </p>
             </div>
           </div>

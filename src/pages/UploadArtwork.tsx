@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,32 @@ import { Label } from "@/components/ui/label";
 import { Upload } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { artworks } from "../data/artworks";
+
+// Функция для конвертации File в Base64
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = error => reject(error);
+  });
+};
+
+// Функция для получения размеров изображения
+const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      // Конвертируем пиксели в сантиметры (примерно 96 DPI = 37.8 пикселей на сантиметр)
+      const pixelsPerCm = 37.8;
+      const width = Math.round(img.width / pixelsPerCm)*10;
+      const height = Math.round(img.height / pixelsPerCm)*10;
+      resolve({ width, height });
+    };
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+};
 
 const UploadArtwork = () => {
   const navigate = useNavigate();
@@ -24,7 +50,34 @@ const UploadArtwork = () => {
   });
   const [isUploading, setIsUploading] = useState(false);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // При загрузке компонента загружаем сохраненные работы
+  useEffect(() => {
+    const savedArtworks = localStorage.getItem('savedArtworks');
+    if (savedArtworks) {
+      const parsedArtworks = JSON.parse(savedArtworks);
+      // Обновляем глобальный массив artworks
+      artworks.length = 0; // Очищаем массив
+      artworks.push(...parsedArtworks); // Добавляем сохраненные работы
+    }
+
+    const webarArtworks = localStorage.getItem('webarArtworks');
+    if (!webarArtworks) {
+      // Инициализируем хранилище начальными данными из artworks
+      const initialData = artworks.reduce((acc, artwork) => {
+        acc[artwork.id] = {
+          id: artwork.id,
+          title: artwork.title,
+          artist: artwork.artist,
+          imageUrl: artwork.imageUrl,
+          dimensions: artwork.dimensions
+        };
+        return acc;
+      }, {});
+      localStorage.setItem('webarArtworks', JSON.stringify(initialData));
+    }
+  }, []);
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setImageFile(file);
@@ -35,10 +88,40 @@ const UploadArtwork = () => {
         setImagePreview(loadEvent.target?.result as string);
       };
       reader.readAsDataURL(file);
+
+      try {
+        // Получаем размеры изображения и обновляем состояние
+        const { width, height } = await getImageDimensions(file);
+        setDimensions({ width, height });
+      } catch (error) {
+        console.error('Error getting image dimensions:', error);
+        toast({
+          title: "Error",
+          description: "Could not determine image dimensions. Please set them manually.",
+          variant: "destructive"
+        });
+      }
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const updateWebARData = (newArtwork: any) => {
+    try {
+      const webarArtworks = JSON.parse(localStorage.getItem('webarArtworks') || '{}');
+      webarArtworks[newArtwork.id] = {
+        id: newArtwork.id,
+        title: newArtwork.title,
+        artist: newArtwork.artist,
+        imageUrl: newArtwork.imageUrl,
+        dimensions: newArtwork.dimensions
+      };
+      localStorage.setItem('webarArtworks', JSON.stringify(webarArtworks));
+    } catch (error) {
+      console.error('Error updating WebAR data:', error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!imageFile || !title || !artist || !description || price <= 0) {
@@ -52,41 +135,51 @@ const UploadArtwork = () => {
 
     setIsUploading(true);
 
-    // In a real application, you'd upload the file to a server
-    // For this demo, we'll create a temporary URL and add to local data
-    
-    // Generate a unique ID for the new artwork
-    const newId = uuidv4();
-    const imageUrl = URL.createObjectURL(imageFile);
-    
-    // Create new artwork object
-    const newArtwork = {
-      id: newId,
-      title,
-      artist,
-      description,
-      price,
-      imageUrl,
-      dimensions: {
-        width: dimensions.width,
-        height: dimensions.height
-      },
-      category: "custom"
-    };
-    
-    // Add to artworks array (in real app, would be an API call)
-    artworks.unshift(newArtwork);
-    
-    toast({
-      title: "Artwork uploaded successfully!",
-      description: "Your artwork has been added to the gallery.",
-    });
-    
-    // Navigate to the new artwork's detail page
-    setTimeout(() => {
+    try {
+      const newId = uuidv4();
+      // Конвертируем изображение в Base64
+      const imageBase64 = await fileToBase64(imageFile);
+      
+      const newArtwork = {
+        id: newId,
+        title,
+        artist,
+        description,
+        price,
+        imageUrl: imageBase64, // Используем Base64 строку вместо URL
+        dimensions: {
+          width: dimensions.width,
+          height: dimensions.height
+        },
+        category: "custom"
+      };
+      
+      // Добавляем в artworks
+      artworks.unshift(newArtwork);
+      
+      // Сохраняем все работы в localStorage
+      localStorage.setItem('savedArtworks', JSON.stringify(artworks));
+      
+      // Обновляем данные для WebAR
+      updateWebARData(newArtwork);
+      
+      toast({
+        title: "Artwork uploaded successfully!",
+        description: "Your artwork has been added to the gallery and WebAR experience.",
+      });
+      
+      setTimeout(() => {
+        setIsUploading(false);
+        navigate(`/artwork/${newId}`);
+      }, 1000);
+    } catch (error) {
       setIsUploading(false);
-      navigate(`/artwork/${newId}`);
-    }, 1000);
+      toast({
+        title: "Error uploading artwork",
+        description: "There was a problem adding your artwork. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (

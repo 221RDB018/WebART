@@ -20,12 +20,12 @@ const Footer = () => {
             <ul className="space-y-2">
               <li><Link to="/" className="text-muted-foreground hover:text-art-purple transition-colors">Home</Link></li>
               <li><Link to="/gallery" className="text-muted-foreground hover:text-art-purple transition-colors">Gallery</Link></li>
-              <li><Link to="/about" className="text-muted-foreground hover:text-art-purple transition-colors">About</Link></li>
-              <li><Link to="/contact" className="text-muted-foreground hover:text-art-purple transition-colors">Contact</Link></li>
+              {/* <li><Link to="/about" className="text-muted-foreground hover:text-art-purple transition-colors">About</Link></li>
+              <li><Link to="/contact" className="text-muted-foreground hover:text-art-purple transition-colors">Contact</Link></li> */}
             </ul>
           </div>
           
-          <div>
+          {/* <div>
             <h5 className="font-medium mb-4">Legal</h5>
             <ul className="space-y-2">
               <li><Link to="/terms" className="text-muted-foreground hover:text-art-purple transition-colors">Terms of Service</Link></li>
@@ -33,14 +33,14 @@ const Footer = () => {
               <li><Link to="/shipping" className="text-muted-foreground hover:text-art-purple transition-colors">Shipping</Link></li>
               <li><Link to="/returns" className="text-muted-foreground hover:text-art-purple transition-colors">Returns</Link></li>
             </ul>
-          </div>
+          </div> */}
         </div>
         
         <div className="border-t mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} WebART. All rights reserved.
           </p>
-          <div className="flex space-x-4 mt-4 md:mt-0">
+          {/* <div className="flex space-x-4 mt-4 md:mt-0">
             <a href="#" className="text-muted-foreground hover:text-art-purple transition-colors">
               <span className="sr-only">Instagram</span>
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -59,7 +59,7 @@ const Footer = () => {
                 />
               </svg>
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>

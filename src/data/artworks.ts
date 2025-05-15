@@ -10,8 +10,8 @@ export const artworks: Artwork[] = [
     price: 450,
     imageUrl: "/abstract-1.jpg",
     dimensions: {
-      width: 60,  // Now in cm (was 24 inches)
-      height: 90, // Now in cm (was 36 inches)
+      width: 70,  // Now in cm (was 24 inches)
+      height: 53, // Now in cm (was 36 inches)
     },
     category: "abstract"
   },
@@ -23,8 +23,8 @@ export const artworks: Artwork[] = [
     price: 680,
     imageUrl: "/landscape-1.jpg",
     dimensions: {
-      width: 76, // Now in cm (was 30 inches)
-      height: 50, // Now in cm (was 20 inches)
+      width: 96, // Now in cm (was 30 inches)
+      height: 64, // Now in cm (was 20 inches)
     },
     category: "landscape"
   },
@@ -36,8 +36,8 @@ export const artworks: Artwork[] = [
     price: 350,
     imageUrl: "/urban-1.jpg",
     dimensions: {
-      width: 45, // Now in cm (was 18 inches)
-      height: 60, // Now in cm (was 24 inches)
+      width: 72, // Now in cm (was 18 inches)
+      height: 48, // Now in cm (was 24 inches)
     },
     category: "photography"
   },
@@ -49,8 +49,8 @@ export const artworks: Artwork[] = [
     price: 520,
     imageUrl: "/floral-1.jpg",
     dimensions: {
-      width: 40, // Now in cm (was 16 inches)
-      height: 50, // Now in cm (was 20 inches)
+      width: 65,  // Now in cm (was 16 inches)
+      height: 43, // Now in cm (was 20 inches)
     },
     category: "floral"
   },
@@ -62,8 +62,8 @@ export const artworks: Artwork[] = [
     price: 790,
     imageUrl: "/portrait-1.jpg",
     dimensions: {
-      width: 60, // Now in cm (was 24 inches)
-      height: 76, // Now in cm (was 30 inches)
+      width: 44, // Now in cm (was 24 inches)
+      height: 66, // Now in cm (was 30 inches)
     },
     category: "portrait"
   },
@@ -75,8 +75,8 @@ export const artworks: Artwork[] = [
     price: 410,
     imageUrl: "/abstract-2.jpg",
     dimensions: {
-      width: 60, // Now in cm (was 24 inches)
-      height: 60, // Now in cm (was 24 inches)
+      width: 86, // Now in cm (was 24 inches)
+      height: 57, // Now in cm (was 24 inches)
     },
     category: "abstract"
   }
