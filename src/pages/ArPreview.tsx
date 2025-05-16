@@ -1,7 +1,9 @@
+
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { getArtworkById, getFrameById } from "../data/artworks";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Play } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ArPreview = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,6 +12,7 @@ const ArPreview = () => {
   const frameId = searchParams.get('frameId');
   const width = searchParams.get('width');
   const height = searchParams.get('height');
+  const isMobile = useIsMobile();
 
   const artwork = id ? getArtworkById(id) : undefined;
   const frame = frameId ? getFrameById(frameId) : undefined;
@@ -113,28 +116,23 @@ const ArPreview = () => {
           </div>
           
           <div className="bg-white rounded-lg shadow p-6">
-            {/* <h3 className="font-serif text-xl mb-4">Coming Soon</h3> */}
-            <p className="mb-4">Our WebAR experience will let you:</p>
-            <ul className="space-y-2 mb-4">
-              <li className="flex items-start">
-                <span className="mr-2">✓</span>
-                <span>Visualize artwork in true-to-size dimensions</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2">✓</span>
-                <span>See how different frames look in your space</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2">✓</span>
-                {/* <span>Take photos to save or share with others</span> */}
-                <span>Upload your own image from your phone gallery</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2">✓</span>
-                {/* <span>Compare multiple artworks side by side</span> */}
-                <span>Customize artwork size and frame style before placing</span>
-              </li>
-            </ul>
+            <h3 className="font-serif text-xl mb-4">Video Tutorial</h3>
+            <div className="relative rounded-lg overflow-hidden bg-art-dark aspect-video mb-4">
+              {/* Video placeholder - replace with actual video embed when available */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="bg-art-purple/80 rounded-full p-3 backdrop-blur-sm">
+                  <Play className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <img 
+                src={artwork.imageUrl} 
+                alt="Video thumbnail" 
+                className="w-full h-full object-cover opacity-50"
+              />
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Watch our quick tutorial to learn how to get the most out of the WebAR experience and place artwork perfectly in your space.
+            </p>
             <Button
               variant="outline"
               onClick={() => navigate(`/artwork/${artwork.id}`)}
