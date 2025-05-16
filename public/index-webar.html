@@ -104,7 +104,7 @@
       
       #instruction-box {
         position: absolute;
-        bottom: 100px;
+        bottom: 120px;
         left: 50%;
         transform: translateX(-50%);
         background: rgba(26, 31, 44, 0.8);
@@ -121,7 +121,7 @@
       }
       
       /* XRButton styling */
-      #XRButton {
+      #ARButton {
         position: absolute;
         bottom: 24px;
         left: 50%;
@@ -137,13 +137,14 @@
         font-size: 16px;
         z-index: 30;
         transition: background 0.2s ease;
+        appearance: none;
       }
       
-      #XRButton:hover {
+      #ARButton:hover {
         background: #7E69AB;
       }
       
-      #XRButton:disabled {
+      #ARButton:disabled {
         background: #666;
         cursor: not-allowed;
         opacity: 0.7;
@@ -182,14 +183,19 @@
     <div id="instruction-box">Tap once to place artwork. Tap on the artwork to adjust position.</div>
     
     <script type="importmap">
-      { "imports": { "three": "https://threejs.org/build/three.module.js" } }
+      { 
+        "imports": { 
+          "three": "https://threejs.org/build/three.module.js",
+          "three/addons/": "https://threejs.org/examples/jsm/"
+        }
+      }
     </script>
     <script type="module">
 import * as THREE from 'three';
-import { ModifiedXRButton } from './ModifiedXRButton.js';
-import { RGBELoader } from 'https://threejs.org/examples/jsm/loaders/RGBELoader.js';
-import { TransformControls } from 'https://threejs.org/examples/jsm/controls/TransformControls.js';
-import { XREstimatedLight } from 'https://threejs.org/examples/jsm/webxr/XREstimatedLight.js';
+import { ARButton } from 'three/addons/webxr/ARButton.js';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { TransformControls } from 'three/addons/controls/TransformControls.js';
+import { XREstimatedLight } from 'three/addons/webxr/XREstimatedLight.js';
 
 // Function to go back to previous page
 window.goBack = function() {
@@ -400,18 +406,16 @@ async function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.xr.enabled = true;
 
-  const xrButton = ModifiedXRButton.createButton(renderer, {
+  // Use the official ARButton
+  const arButton = ARButton.createButton(renderer, {
     requiredFeatures: ['hit-test'],
     optionalFeatures: ['local-floor', 'light-estimation']
-  }, {
-    className: "ar-button",
-    startText: "Launch AR Experience",
-    stopText: "Exit AR",
-    notSupportedText: "AR Not Supported",
-    notAllowedText: "AR Not Allowed"
   });
-
-  document.body.appendChild(xrButton);
+  
+  // Apply our custom styling to ARButton
+  arButton.id = 'ARButton';
+  
+  document.body.appendChild(arButton);
 
   new RGBELoader()
     .setPath('https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/')
