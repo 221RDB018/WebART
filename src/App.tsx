@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { CartProvider } from "./contexts/CartContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import { LanguageProvider } from "./contexts/LanguageContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Gallery from "./pages/Gallery";
@@ -24,33 +25,35 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <CartProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Navbar />
-            <main className="min-h-screen">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/gallery" element={<Gallery />} />
-                <Route path="/artwork/:id" element={<ArtworkDetail />} />
-                <Route path="/ar-preview/:id" element={<ArPreview />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/upload-artwork" element={<UploadArtwork />} />
-                <Route 
-                  path="/profile" 
-                  element={
-                    <RequireAuth>
-                      <Profile />
-                    </RequireAuth>
-                  }
-                />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-            <Footer />
-          </BrowserRouter>
-        </CartProvider>
+        <LanguageProvider>
+          <CartProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Navbar />
+              <main className="min-h-screen">
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/gallery" element={<Gallery />} />
+                  <Route path="/artwork/:id" element={<ArtworkDetail />} />
+                  <Route path="/ar-preview/:id" element={<ArPreview />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/upload-artwork" element={<UploadArtwork />} />
+                  <Route 
+                    path="/profile" 
+                    element={
+                      <RequireAuth>
+                        <Profile />
+                      </RequireAuth>
+                    }
+                  />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              <Footer />
+            </BrowserRouter>
+          </CartProvider>
+        </LanguageProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

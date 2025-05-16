@@ -15,11 +15,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import LanguageSelector from "./LanguageSelector";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Navbar = () => {
   const { cartCount } = useCart();
   const { user, signOut } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -37,10 +40,10 @@ const Navbar = () => {
           
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/" className="font-medium hover:text-art-purple transition-colors">
-              Home
+              {t('home')}
             </Link>
             <Link to="/gallery" className="font-medium hover:text-art-purple transition-colors">
-              Gallery
+              {t('gallery')}
             </Link>
 {/*             <Link to="/about" className="font-medium hover:text-art-purple transition-colors">
               About
@@ -51,6 +54,8 @@ const Navbar = () => {
           </div>
           
           <div className="flex items-center space-x-4">
+            <LanguageSelector />
+            
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -70,7 +75,7 @@ const Navbar = () => {
               </DropdownMenu>
             ) : (
               <Button variant="outline" size="sm" asChild>
-                <Link to="/auth">Sign In</Link>
+                <Link to="/auth">{t('signIn')}</Link>
               </Button>
             )}
 
@@ -87,9 +92,9 @@ const Navbar = () => {
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader>
-                  <SheetTitle>Your Cart</SheetTitle>
+                  <SheetTitle>{t('yourCart')}</SheetTitle>
                   <SheetDescription>
-                    Review your selected items
+                    {t('reviewItems')}
                   </SheetDescription>
                 </SheetHeader>
                 <CartSheet />
@@ -132,11 +137,11 @@ const Navbar = () => {
           <div className="art-container">
             <div className="flex flex-col space-y-3">
               <Link to="/" className="font-medium py-2 hover:text-art-purple transition-colors">
-                Home
+                {t('home')}
               </Link>
               <Separator />
               <Link to="/gallery" className="font-medium py-2 hover:text-art-purple transition-colors">
-                Gallery
+                {t('gallery')}
               </Link>
               {/* <Separator />
               <Link to="/about" className="font-medium py-2 hover:text-art-purple transition-colors">
@@ -150,7 +155,7 @@ const Navbar = () => {
                 <>
                   <Separator />
                   <Link to="/auth" className="font-medium py-2 hover:text-art-purple transition-colors">
-                    Sign In
+                    {t('signIn')}
                   </Link>
                 </>
               )}
