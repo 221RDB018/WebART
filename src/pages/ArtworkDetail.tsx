@@ -1,7 +1,7 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { getArtworkById, frames } from "../data/artworks";
+import { useArtworks } from "../data/artworks";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -10,11 +10,14 @@ import { Slider } from "@/components/ui/slider";
 import { formatCurrency } from "../utils/formatters";
 import { useCart } from "../contexts/CartContext";
 import { Frame } from "../types";
+import { useLanguage } from "../contexts/LanguageContext";
 
-const ArtworkDetail = () => {
+const ArtworkDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { getArtworkById, frames } = useArtworks();
   const { addToCart } = useCart();
+  const { t } = useLanguage();
 
   const artwork = id ? getArtworkById(id.toString()) : undefined;
 
@@ -46,9 +49,9 @@ const ArtworkDetail = () => {
   if (!artwork) {
     return (
       <div className="art-container py-12 text-center">
-        <p>Artwork not found.</p>
+        <p>{t('artworkNotFound')}</p>
         <Button variant="link" onClick={() => navigate('/gallery')}>
-          Return to Gallery
+          {t('returnToGallery')}
         </Button>
       </div>
     );
@@ -81,7 +84,7 @@ const ArtworkDetail = () => {
           onClick={() => navigate(-1)}
         >
           <ArrowLeft size={16} />
-          <span>Back</span>
+          <span>{t('back')}</span>
         </Button>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
@@ -97,15 +100,15 @@ const ArtworkDetail = () => {
           
           <div>
             <h1 className="text-3xl font-serif font-medium mb-2">{artwork.title}</h1>
-            <p className="text-lg text-muted-foreground mb-4">by {artwork.artist}</p>
+            <p className="text-lg text-muted-foreground mb-4">{t('by')} {artwork.artist}</p>
             
             <div className="mb-6">
-              <h2 className="font-semibold mb-2">Description</h2>
+              <h2 className="font-semibold mb-2">{t('description')}</h2>
               <p className="text-muted-foreground">{artwork.description}</p>
             </div>
             
             <div className="mb-6">
-              <h2 className="font-semibold mb-2">Select Frame</h2>
+              <h2 className="font-semibold mb-2">{t('selectFrame')}</h2>
               <RadioGroup className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 <div>
                   <RadioGroupItem
@@ -120,9 +123,9 @@ const ArtworkDetail = () => {
                     className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                   >
                     <div className="mb-2 h-16 w-16 rounded border flex items-center justify-center">
-                      <span className="text-xs text-muted-foreground">No Frame</span>
+                      <span className="text-xs text-muted-foreground">{t('noFrame')}</span>
                     </div>
-                    <span className="block w-full text-center font-medium">No Frame</span>
+                    <span className="block w-full text-center font-medium">{t('noFrame')}</span>
                   </Label>
                 </div>
                 
@@ -154,14 +157,16 @@ const ArtworkDetail = () => {
             </div>
             
             <div className="mb-6">
-              <h2 className="font-semibold mb-4">Customize Size</h2>
+              <h2 className="font-semibold mb-4">{t('customizeSize')}</h2>
               
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between mb-2">
-                    <Label htmlFor="size-slider">Size: {customWidth} × {customHeight} cm</Label>
+                    <Label htmlFor="size-slider">
+                      {t('dimensions', { width: customWidth.toString(), height: customHeight.toString() })}
+                    </Label>
                     <span className="text-sm text-muted-foreground">
-                      Original: {artwork.dimensions.width} × {artwork.dimensions.height} cm
+                      {t('original', { width: artwork.dimensions.width.toString(), height: artwork.dimensions.height.toString() })}
                     </span>
                   </div>
                   <Slider
@@ -179,17 +184,17 @@ const ArtworkDetail = () => {
             <Card className="mb-6">
               <CardContent className="p-4">
                 <div className="flex justify-between mb-2">
-                  <span>Artwork ({customWidth} × {customHeight} cm)</span>
+                  <span>{t('artworkWithDimensions', { width: customWidth.toString(), height: customHeight.toString() })}</span>
                   <span>{formatCurrency(adjustedArtPrice)}</span>
                 </div>
                 {selectedFrame && (
                   <div className="flex justify-between mb-2">
-                    <span>Frame ({selectedFrame.name})</span>
+                    <span>{t('frameWithName', { name: selectedFrame.name })}</span>
                     <span>{formatCurrency(selectedFrame.price)}</span>
                   </div>
                 )}
                 <div className="flex justify-between font-semibold text-lg border-t mt-2 pt-2">
-                  <span>Total</span>
+                  <span>{t('total')}</span>
                   <span>{formatCurrency(totalPrice)}</span>
                 </div>
               </CardContent>
@@ -201,7 +206,7 @@ const ArtworkDetail = () => {
                 className="w-full sm:w-2/3"
                 onClick={handleAddToCart}
               >
-                Add to Cart
+                {t('addToCart')}
               </Button>
               <Button 
                 size="lg"
@@ -217,7 +222,7 @@ const ArtworkDetail = () => {
                   navigate(`/ar-preview/${artwork.id}?${params.toString()}`);
                 }}
               >
-                AR Preview
+                {t('arPreview')}
               </Button>
             </div>
           </div>

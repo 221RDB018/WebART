@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Artwork, CartItem, Frame } from "../types";
-import { getFrameById } from "../data/artworks";
+import { useArtworks } from "../data/artworks";
 
 interface CartContextProps {
   cartItems: CartItem[];
@@ -20,6 +19,7 @@ interface CartProviderProps {
 }
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+  const { getFrameById } = useArtworks();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const addToCart = (artwork: Artwork, frame?: Frame, customWidth: number = artwork.dimensions.width, customHeight: number = artwork.dimensions.height) => {

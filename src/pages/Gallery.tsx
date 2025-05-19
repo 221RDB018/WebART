@@ -1,30 +1,34 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Upload, Search, Filter } from 'lucide-react';
+import { useArtworks } from '../data/artworks';
 import ArtworkCard from '../components/ArtworkCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Upload } from 'lucide-react';
-import { Artwork } from '../types';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useIsMobile } from '../hooks/use-mobile';
-import { artworks as localArtworks } from '../data/artworks';
 
-const Gallery = () => {
+const Gallery: React.FC = () => {
   const navigate = useNavigate();
+  const { artworks } = useArtworks();
   const [activeCategory, setActiveCategory] = useState('all');
   const isMobile = useIsMobile();
+  const { t } = useLanguage();
 
   const categories = [
-    { id: 'all', name: 'All Artworks' },
-    { id: 'abstract', name: 'Abstract' },
-    { id: 'landscape', name: 'Landscape' },
-    { id: 'portrait', name: 'Portrait' },
-    { id: 'photography', name: 'Photography' },
-    { id: 'floral', name: 'Floral' },
-    { id: 'custom', name: 'My Uploads' }
+    { id: 'all', name: t('allArtworks') },
+    { id: 'abstract', name: t('abstract') },
+    { id: 'landscape', name: t('landscape') },
+    { id: 'portrait', name: t('portrait') },
+    { id: 'photography', name: t('photography') },
+    { id: 'floral', name: t('floral') },
+    { id: 'custom', name: t('myUploads') }
   ];
 
   // Use local data directly instead of fetching from Supabase
-  const allArtworks = localArtworks.map(art => ({
+  const allArtworks = artworks.map(art => ({
     ...art,
     id: art.id.toString() // Ensure all IDs are strings for consistency
   }));
@@ -37,9 +41,9 @@ const Gallery = () => {
     <div className="py-6 md:py-12">
       <div className="art-container">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl md:text-4xl font-serif mb-3">Art Gallery</h1>
+          <h1 className="text-3xl md:text-4xl font-serif mb-3">{t('artGallery')}</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto mb-5 px-4">
-            Explore our curated collection of unique artworks from talented artists around the world.
+            {t('galleryDescription')}
           </p>
           <div className="flex justify-center">
             <Button 
@@ -47,7 +51,7 @@ const Gallery = () => {
               className="flex items-center gap-2"
             >
               <Upload size={18} />
-              Upload Your Artwork
+              {t('uploadYourArtwork')}
             </Button>
           </div>
         </div>
@@ -78,7 +82,7 @@ const Gallery = () => {
                 </div>
                 {filteredArtworks.length === 0 && (
                   <div className="text-center py-12">
-                    <p className="text-muted-foreground mb-4">No artworks found in this category.</p>
+                    <p className="text-muted-foreground mb-4">{t('noArtworksFound')}</p>
                     {category.id === 'custom' && (
                       <div className="flex justify-center">
                         <Button 
@@ -86,7 +90,7 @@ const Gallery = () => {
                           className="flex items-center gap-2"
                         >
                           <Upload size={18} />
-                          Upload Your First Artwork
+                          {t('uploadFirstArtwork')}
                         </Button>
                       </div>
                     )}

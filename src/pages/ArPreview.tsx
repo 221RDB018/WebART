@@ -1,20 +1,20 @@
-
+import React from 'react';
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { getArtworkById, getFrameById } from "../data/artworks";
+import { useArtworks } from "../data/artworks";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Play } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const ArPreview = () => {
-  const { id } = useParams<{ id: string }>();
+const ArPreview: React.FC = () => {
+  const { id, frameId } = useParams<{ id: string; frameId: string }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const frameId = searchParams.get('frameId');
   const width = searchParams.get('width');
   const height = searchParams.get('height');
   const isMobile = useIsMobile();
   const { t } = useLanguage();
+  const { getArtworkById, getFrameById } = useArtworks();
 
   const artwork = id ? getArtworkById(id) : undefined;
   const frame = frameId ? getFrameById(frameId) : undefined;

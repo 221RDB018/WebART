@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Upload } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { artworks } from "../data/artworks";
+import { useArtworks } from "../data/artworks";
 
 // Функция для конвертации File в Base64
 const fileToBase64 = (file: File): Promise<string> => {
@@ -35,9 +35,10 @@ const getImageDimensions = (file: File): Promise<{ width: number; height: number
   });
 };
 
-const UploadArtwork = () => {
+const UploadArtwork: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { artworks } = useArtworks();
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
   const [description, setDescription] = useState("");

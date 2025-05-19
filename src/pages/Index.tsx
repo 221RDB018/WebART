@@ -1,13 +1,17 @@
+import React from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Image } from "lucide-react";
-import { artworks } from "../data/artworks";
+import { useArtworks } from "../data/artworks";
 import ArtworkCard from "../components/ArtworkCard";
 import { useIsMobile } from "../hooks/use-mobile";
+import { useLanguage } from "../contexts/LanguageContext";
 
-const Index = () => {
+const Index: React.FC = () => {
+  const { artworks } = useArtworks();
   const featuredArtworks = artworks.slice(0, 3);
   const isMobile = useIsMobile();
+  const { t } = useLanguage();
   
   return (
     <div>
@@ -17,18 +21,15 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
             <div className="text-center md:text-left">
               <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl font-semibold mb-4 leading-tight">
-                Find Art That Speaks <span className="text-art-purple">To You</span>
+                {t('findArtThatSpeaks')}
               </h1>
               <p className="text-lg mb-6 text-muted-foreground max-w-md md:mx-0 mx-auto px-4 md:px-0">
-                Discover unique artworks from talented artists and customize them to perfectly fit your space.
+                {t('discoverUniqueArtworks')}
               </p>
               <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                 <Button asChild size="lg" className="px-6 md:px-8">
-                  <Link to="/gallery">Explore Gallery</Link>
+                  <Link to="/gallery">{t('exploreGallery')}</Link>
                 </Button>
-                {/* <Button asChild size="lg" variant="outline" className="px-6 md:px-8">
-                  <Link to="/about">Learn More</Link>
-                </Button> */}
               </div>
             </div>
             <div className={`relative ${isMobile ? 'mt-8 flex justify-center' : 'hidden md:block'}`}>
@@ -74,9 +75,9 @@ const Index = () => {
       <section className="py-12 md:py-24">
         <div className="art-container px-4 md:px-8">
           <div className="text-center mb-10">
-            <h2 className="font-serif text-2xl md:text-4xl font-medium mb-4">How It Works</h2>
+            <h2 className="font-serif text-2xl md:text-4xl font-medium mb-4">{t('howItWorksTitle')}</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Our platform makes it easy to find the perfect artwork for your space and customize it to your exact specifications.
+              {t('platformDescription')}
             </p>
           </div>
           
@@ -85,9 +86,9 @@ const Index = () => {
               <div className="inline-flex items-center justify-center rounded-full bg-art-light h-16 w-16 mb-4">
                 <Image className="h-8 w-8 text-art-purple" />
               </div>
-              <h3 className="font-serif text-xl mb-3">Browse Artwork</h3>
+              <h3 className="font-serif text-xl mb-3">{t('browseArtwork')}</h3>
               <p className="text-muted-foreground">
-                Explore our curated collection of artwork from talented artists around the world.
+                {t('browseDescription')}
               </p>
             </div>
             
@@ -97,9 +98,9 @@ const Index = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
               </div>
-              <h3 className="font-serif text-xl mb-3">Customize</h3>
+              <h3 className="font-serif text-xl mb-3">{t('customize')}</h3>
               <p className="text-muted-foreground">
-                Select your preferred frame style and customize dimensions to fit your space perfectly.
+                {t('customizeDescription')}
               </p>
             </div>
             
@@ -110,9 +111,9 @@ const Index = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
                 </svg>
               </div>
-              <h3 className="font-serif text-xl mb-3">Visualize</h3>
+              <h3 className="font-serif text-xl mb-3">{t('visualize')}</h3>
               <p className="text-muted-foreground">
-                Preview how the artwork will look in your space with our WebAR technology.
+                {t('visualizeDescription')}
               </p>
             </div>
           </div>
@@ -123,9 +124,9 @@ const Index = () => {
       <section className="bg-white py-12 md:py-24">
         <div className="art-container px-4 md:px-8">
           <div className="flex justify-between items-center mb-6 md:mb-8">
-            <h2 className="font-serif text-2xl md:text-3xl font-medium">Featured Artwork</h2>
+            <h2 className="font-serif text-2xl md:text-3xl font-medium">{t('featuredArtwork')}</h2>
             <Link to="/gallery" className="text-art-purple hover:underline flex items-center gap-1 text-sm md:text-base">
-              View all <ArrowRight size={16} />
+              {t('viewAll')} <ArrowRight size={16} />
             </Link>
           </div>
           
@@ -142,13 +143,13 @@ const Index = () => {
         <div className="art-container px-4 md:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="font-serif text-2xl md:text-4xl font-medium mb-4">
-              Ready to Transform Your Space?
+              {t('readyToTransform')}
             </h2>
             <p className="text-muted-foreground mb-6 md:mb-8 text-base md:text-lg">
-              Explore our curated collection of artwork and find the perfect piece for your home or office.
+              {t('exploreCollection')}
             </p>
             <Button asChild size="lg" className="px-6 md:px-8">
-              <Link to="/gallery">Browse Gallery</Link>
+              <Link to="/gallery">{t('browseGallery')}</Link>
             </Button>
           </div>
         </div>
