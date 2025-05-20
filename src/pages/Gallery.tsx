@@ -1,14 +1,14 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Upload, Search, Filter } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { useArtworks } from '../contexts/ArtworksContext';
 import ArtworkCard from '../components/ArtworkCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useIsMobile } from '../hooks/use-mobile';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const Gallery: React.FC = () => {
   const navigate = useNavigate();
@@ -57,20 +57,40 @@ const Gallery: React.FC = () => {
         </div>
 
         <Tabs defaultValue="all" className="mb-6">
-          <div className="flex justify-center mb-6 overflow-x-auto pb-2">
-            <TabsList className={isMobile ? "w-full overflow-x-auto" : ""}>
-              {categories.map(category => (
-                <TabsTrigger 
-                  key={category.id} 
-                  value={category.id}
-                  onClick={() => setActiveCategory(category.id)}
-                  className={isMobile ? "min-w-fit" : ""}
-                >
-                  {category.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </div>
+          {isMobile ? (
+            <div className="mb-6">
+              <ScrollArea className="w-full" orientation="horizontal">
+                <div className="py-1">
+                  <TabsList className="flex w-max">
+                    {categories.map(category => (
+                      <TabsTrigger 
+                        key={category.id} 
+                        value={category.id}
+                        onClick={() => setActiveCategory(category.id)}
+                        className="min-w-fit"
+                      >
+                        {category.name}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                </div>
+              </ScrollArea>
+            </div>
+          ) : (
+            <div className="flex justify-center mb-6">
+              <TabsList>
+                {categories.map(category => (
+                  <TabsTrigger 
+                    key={category.id} 
+                    value={category.id}
+                    onClick={() => setActiveCategory(category.id)}
+                  >
+                    {category.name}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </div>
+          )}
           
           <div>
             {categories.map(category => (
