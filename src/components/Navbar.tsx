@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
-import { ShoppingCart, User } from "lucide-react";
+import { ShoppingCart, User, Upload } from "lucide-react";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { useState } from "react";
@@ -44,6 +44,9 @@ const Navbar = () => {
             </Link>
             <Link to="/gallery" className="font-medium hover:text-art-purple transition-colors">
               {t('gallery')}
+            </Link>
+            <Link to="/upload-artwork" className="font-medium hover:text-art-purple transition-colors">
+              {t('uploadArtwork')}
             </Link>
 {/*             <Link to="/about" className="font-medium hover:text-art-purple transition-colors">
               About
@@ -142,6 +145,10 @@ const Navbar = () => {
               <Separator />
               <Link to="/gallery" className="font-medium py-2 hover:text-art-purple transition-colors">
                 {t('gallery')}
+              </Link>
+              <Separator />
+              <Link to="/upload-artwork" className="font-medium py-2 hover:text-art-purple transition-colors">
+                {t('uploadArtwork')}
               </Link>
               {/* <Separator />
               <Link to="/about" className="font-medium py-2 hover:text-art-purple transition-colors">

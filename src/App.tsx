@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -40,7 +41,7 @@ function App() {
                         <Route path="/ar-preview/:id" element={<ArPreview />} />
                         <Route path="/auth" element={<Auth />} />
                         <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
-                        <Route path="/upload-artwork" element={<RequireAuth><UploadArtwork /></RequireAuth>} />
+                        <Route path="/upload-artwork" element={<UploadArtwork />} />
                         <Route path="/404" element={<NotFound />} />
                         <Route path="*" element={<Navigate to="/404" replace />} />
                       </Routes>
