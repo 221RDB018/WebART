@@ -59,7 +59,7 @@ const Gallery: React.FC = () => {
         <Tabs defaultValue="all" className="mb-6">
           {isMobile ? (
             <div className="mb-6">
-              <ScrollArea className="w-full" orientation="horizontal">
+              <ScrollArea className="w-full">
                 <div className="py-1">
                   <TabsList className="flex w-max">
                     {categories.map(category => (
