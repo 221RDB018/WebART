@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Upload } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useArtworks } from "../contexts/ArtworksContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
 // Функция для конвертации File в Base64
 const fileToBase64 = (file: File): Promise<string> => {
@@ -35,10 +36,62 @@ const getImageDimensions = (file: File): Promise<{ width: number; height: number
   });
 };
 
+// Функция для сжатия изображения
+const compressImage = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        // Максимальные размеры
+        const MAX_WIDTH = 1200;
+        const MAX_HEIGHT = 1200;
+        
+        // Изменяем размеры, сохраняя пропорции
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width = Math.round((width * MAX_HEIGHT) / height);
+            height = MAX_HEIGHT;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Could not get canvas context'));
+          return;
+        }
+        
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Получаем сжатое изображение в формате JPEG с качеством 0.7
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        resolve(compressedDataUrl);
+      };
+      img.onerror = reject;
+    };
+    reader.onerror = reject;
+  });
+};
+
 const UploadArtwork: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { artworks, setArtworks } = useArtworks();
+  const { t } = useLanguage();
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
   const [description, setDescription] = useState("");
@@ -87,8 +140,8 @@ const UploadArtwork: React.FC = () => {
       // Проверяем размер файла
       if (file.size > MAX_FILE_SIZE) {
         toast({
-          title: "Kļūda",
-          description: "Attēla izmērs nedrīkst pārsniegt 10MB",
+          title: t('error'),
+          description: t('imageSizeError'),
           variant: "destructive"
         });
         return;
@@ -96,21 +149,18 @@ const UploadArtwork: React.FC = () => {
 
       setImageFile(file);
       
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (loadEvent) => {
-        setImagePreview(loadEvent.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-
       try {
+        // Сжимаем изображение
+        const compressedImage = await compressImage(file);
+        setImagePreview(compressedImage);
+        
         const { width, height } = await getImageDimensions(file);
         setDimensions({ width, height });
       } catch (error) {
-        console.error('Error getting image dimensions:', error);
+        console.error('Error processing image:', error);
         toast({
-          title: "Kļūda",
-          description: "Neizdevās noteikt attēla izmērus. Lūdzu, iestatiet tos manuāli.",
+          title: t('error'),
+          description: t('dimensionsError'),
           variant: "destructive"
         });
       }
@@ -139,8 +189,8 @@ const UploadArtwork: React.FC = () => {
     
     if (!imageFile || !title || !artist || !description || price <= 0) {
       toast({
-        title: "Trūkst informācijas",
-        description: "Lūdzu, aizpildiet visus laukus un augšupielādējiet attēlu.",
+        title: t('missingInformation'),
+        description: t('fillAllFields'),
         variant: "destructive"
       });
       return;
@@ -149,22 +199,23 @@ const UploadArtwork: React.FC = () => {
     setIsUploading(true);
 
     try {
-    const newId = uuidv4();
-      const imageBase64 = await fileToBase64(imageFile);
+      const newId = uuidv4();
+      // Используем уже сжатое изображение из превью
+      const imageBase64 = imagePreview || await compressImage(imageFile);
     
-    const newArtwork = {
-      id: newId,
-      title,
-      artist,
-      description,
-      price,
+      const newArtwork = {
+        id: newId,
+        title,
+        artist,
+        description,
+        price,
         imageUrl: imageBase64,
-      dimensions: {
-        width: dimensions.width,
-        height: dimensions.height
-      },
-      category: "custom"
-    };
+        dimensions: {
+          width: dimensions.width,
+          height: dimensions.height
+        },
+        category: "custom"
+      };
     
       // Обновляем artworks с помощью setArtworks
       const updatedArtworks = [newArtwork, ...artworks];
@@ -176,20 +227,20 @@ const UploadArtwork: React.FC = () => {
       // Обновляем данные для WebAR
       updateWebARData(newArtwork);
     
-    toast({
-        title: "Mākslas darbs veiksmīgi augšupielādēts!",
-        description: "Jūsu mākslas darbs ir pievienots galerijai un WebAR pieredzei.",
-    });
+      toast({
+        title: t('uploadSuccess'),
+        description: t('addedToGallery'),
+      });
     
-    setTimeout(() => {
-      setIsUploading(false);
-      navigate(`/artwork/${newId}`);
-    }, 1000);
+      setTimeout(() => {
+        setIsUploading(false);
+        navigate(`/artwork/${newId}`);
+      }, 1000);
     } catch (error) {
       setIsUploading(false);
       toast({
-        title: "Kļūda augšupielādējot mākslas darbu",
-        description: "Radusies problēma, pievienojot jūsu mākslas darbu. Lūdzu, mēģiniet vēlreiz.",
+        title: t('uploadError'),
+        description: t('tryAgain'),
         variant: "destructive"
       });
     }
@@ -198,41 +249,41 @@ const UploadArtwork: React.FC = () => {
   return (
     <div className="py-8 md:py-12">
       <div className="art-container max-w-4xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-serif mb-6 text-center">Augšupielādēt mākslas darbu</h1>
+        <h1 className="text-3xl md:text-4xl font-serif mb-6 text-center">{t('uploadArtwork')}</h1>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="title">Mākslas darba nosaukums</Label>
+                <Label htmlFor="title">{t('artworkTitle')}</Label>
                 <Input
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Ievadiet mākslas darba nosaukumu"
+                  placeholder={t('enterArtworkTitle')}
                   required
                 />
               </div>
               
               <div>
-                <Label htmlFor="artist">Mākslinieka vārds</Label>
+                <Label htmlFor="artist">{t('artistName')}</Label>
                 <Input
                   id="artist"
                   value={artist}
                   onChange={(e) => setArtist(e.target.value)}
-                  placeholder="Ievadiet mākslinieka vārdu"
+                  placeholder={t('enterArtistName')}
                   required
                 />
               </div>
               
               <div>
-                <Label htmlFor="price">Cena</Label>
+                <Label htmlFor="price">{t('price')}</Label>
                 <Input
                   id="price"
                   type="number"
                   value={price.toString()}
                   onChange={(e) => setPrice(Number(e.target.value))}
-                  placeholder="Ievadiet cenu"
+                  placeholder={t('enterPrice')}
                   min="1"
                   required
                 />
@@ -240,7 +291,7 @@ const UploadArtwork: React.FC = () => {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="width">Platums (cm)</Label>
+                  <Label htmlFor="width">{t('width')}</Label>
                   <Input
                     id="width"
                     type="number"
@@ -251,7 +302,7 @@ const UploadArtwork: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="height">Augstums (cm)</Label>
+                  <Label htmlFor="height">{t('height')}</Label>
                   <Input
                     id="height"
                     type="number"
@@ -264,12 +315,12 @@ const UploadArtwork: React.FC = () => {
               </div>
               
               <div>
-                <Label htmlFor="description">Apraksts</Label>
+                <Label htmlFor="description">{t('description')}</Label>
                 <Textarea
                   id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Ievadiet mākslas darba aprakstu"
+                  placeholder={t('enterDescription')}
                   rows={4}
                   required
                 />
@@ -277,13 +328,13 @@ const UploadArtwork: React.FC = () => {
             </div>
             
             <div className="space-y-4">
-              <Label className="block mb-2">Augšupielādēt attēlu</Label>
+              <Label className="block mb-2">{t('uploadImage')}</Label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center min-h-[300px] bg-gray-50">
                 {imagePreview ? (
                   <div className="w-full">
                     <img
                       src={imagePreview}
-                      alt="Priekšskatījums"
+                      alt={t('preview')}
                       className="mx-auto max-h-[250px] object-contain mb-4"
                     />
                     <Button 
@@ -295,15 +346,15 @@ const UploadArtwork: React.FC = () => {
                         setImageFile(null);
                       }}
                     >
-                      Noņemt attēlu
+                      {t('removeImage')}
                     </Button>
                   </div>
                 ) : (
                   <label className="w-full cursor-pointer">
                     <div className="flex flex-col items-center justify-center py-10">
                       <Upload size={40} className="text-gray-400 mb-2" />
-                      <p className="text-sm text-gray-500">Klikšķiniet, lai augšupielādētu vai velciet un nometiet</p>
-                      <p className="text-xs text-gray-400 mt-1">PNG, JPG, WEBP (maks. 10MB)</p>
+                      <p className="text-sm text-gray-500">{t('clickToUpload')}</p>
+                      <p className="text-xs text-gray-400 mt-1">{t('imageFormats')}</p>
                     </div>
                     <Input
                       type="file"
@@ -320,7 +371,7 @@ const UploadArtwork: React.FC = () => {
                 className="w-full mt-6" 
                 disabled={isUploading}
               >
-                {isUploading ? "Apstrādā..." : "Augšupielādēt mākslas darbu"}
+                {isUploading ? t('processing') : t('uploadArtwork')}
               </Button>
             </div>
           </div>
