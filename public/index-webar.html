@@ -39,12 +39,14 @@
         border-radius: 12px;
         font-size: 16px;
         text-align: center;
-        width: 100%;
+        width: 90%;
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         backdrop-filter: blur(4px);
-        border: 1px solid rgba(155, 135, 245, 0.3);
+        border: 1px solid rgba(255, 255, 255);
         pointer-events: auto;
       }
+
+      /* border: 1px solid rgba(155, 135, 245, 0.3); */
       
       #ar-failure {
         display: none; 
@@ -78,6 +80,7 @@
         border: 1px solid rgba(155, 135, 245, 0.3);
       }
       
+      
       #back-button {
         position: absolute;
         top: 16px;
@@ -107,25 +110,26 @@
       
       #instruction-box {
         position: absolute;
-        bottom: 90px;
+        bottom: 200px;
         left: 50%;
         transform: translateX(-50%);
         background: rgba(26, 31, 44, 0.8);
         padding: 12px 18px;
         border-radius: 12px;
         text-align: center;
-        width: 90%;
+        width: 70%;
         max-width: 320px;
         font-size: 14px;
         color: white;
         opacity: 0.9;
         backdrop-filter: blur(4px);
         border: 1px solid rgba(155, 135, 245, 0.3);
+        border: 1px solid rgba(255, 255, 255);
         z-index: 10;
       }
       
       /* XRButton styling */
-      #ARButton {
+      /* #ARButton {
         position: absolute;
         bottom: 24px;
         left: 50%;
@@ -146,7 +150,7 @@
         max-width: 240px;
         text-align: center;
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      }
+      } */
       
       #ARButton:hover {
         background: #7E69AB;
@@ -199,10 +203,10 @@
           font-size: 14px;
         }
         
-        #timer-display {
+        /* #timer-display {
           padding: 6px 10px;
           font-size: 14px;
-        }
+        } */
       }
     </style>
   </head>
@@ -223,8 +227,8 @@
     </div>
     
     <div id="ar-failure">AR is not tracking</div>
-    <div id="timer-display"></div>
-    <div id="instruction-box">Tap once to place artwork. Tap on the artwork to adjust position.</div>
+    <!-- <div id="timer-display"></div> -->
+    <div id="instruction-box">Point your phone to the wall. Tap once to place artwork. Tap on the artwork to adjust position.</div>
     
     <script type="importmap">
       { 
@@ -410,7 +414,7 @@ function createArtworkModel(artwork, frame) {
     
     function createFramePiece(width, height, depth, y = 0, x = 0) {
       const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), frameMaterial);
-      mesh.position.set(x, y, 0);
+      mesh.position.set(x, y, 0); 
       return mesh;
     }
     
@@ -424,6 +428,7 @@ function createArtworkModel(artwork, frame) {
     group.add(bottomFrame);
     group.add(leftFrame);
     group.add(rightFrame);
+
   }
   
   return group;
@@ -438,7 +443,7 @@ async function init() {
   loadingMessage.innerHTML = `
     <h1>${artwork.title}</h1>
     <div class="artwork-details">by ${artwork.artist}</div>
-    <div>Detecting surfaces to place artwork...</div>
+    <div>Press Start AR to launch the AR experience</div>
   `;
   
   scene = new THREE.Scene();
@@ -452,14 +457,15 @@ async function init() {
 
   // Use the official ARButton
   const arButton = ARButton.createButton(renderer, {
-    requiredFeatures: ['hit-test'],
-    optionalFeatures: ['local-floor', 'light-estimation']
-  });
-  
+        requiredFeatures: ['hit-test'],
+        optionalFeatures: ['local-floor', 'light-estimation']
+      });
+
   // Apply our custom styling to ARButton
-  arButton.id = 'ARButton';
+  
   
   document.body.appendChild(arButton);
+  arButton.id = 'ARButton';
 
   new RGBELoader()
     .setPath('https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/')
@@ -507,17 +513,22 @@ async function init() {
 
 function onSelect() {
   if (!placed) {
-    // Hide instruction container when artwork is placed
-    document.getElementById('instruction-container').style.display = 'none';
-    document.getElementById('instruction-box').textContent = 'Tap on the artwork to move, rotate, or scale it';
-    
-    model.visible = true;
-    model.position.set(0,1,-1).applyMatrix4(camera.matrixWorld);
-    model.quaternion.copy(camera.quaternion);
-    placed = true;
-    controls.attach(model);
-    controls.visible = false;
-    controlsVisible = false;
+    // Если модель видна (hit test нашел поверхность), используем текущую позицию
+    if (model.visible) {
+      placed = true;
+      controls.attach(model);
+      controls.visible = false;
+      controlsVisible = false;
+    } else {
+      // Если hit test не нашел поверхность, размещаем на фиксированном расстоянии
+      model.visible = true;
+      model.position.set(0, 0, -1).applyMatrix4(camera.matrixWorld);
+      model.quaternion.copy(camera.quaternion);
+      placed = true;
+      controls.attach(model);
+      controls.visible = false;
+      controlsVisible = false;
+    }
   } else {
     raycaster.setFromXRController(controller);
     const intersects = raycaster.intersectObject(model, true);
@@ -525,12 +536,10 @@ function onSelect() {
       controls.attach(model);
       controls.visible = true;
       controlsVisible = true;
-      document.getElementById('instruction-box').textContent = 'Drag handles to adjust position, rotation, and scale';
     } else {
       controls.detach();
       controls.visible = false;
       controlsVisible = false;
-      document.getElementById('instruction-box').textContent = 'Tap on the artwork to move, rotate, or scale it';
     }
   }
 }
@@ -568,8 +577,8 @@ function render(timestamp, frame) {
           placed = true;
           
           // Hide instruction container when artwork is placed
-          document.getElementById('instruction-container').style.display = 'none';
-          document.getElementById('instruction-box').textContent = 'Tap on the artwork to move, rotate, or scale it';
+          //document.getElementById('instruction-container').style.display = 'none';
+          //document.getElementById('instruction-box').textContent = 'Tap on the artwork to move, rotate, or scale it';
         }
       }
     }

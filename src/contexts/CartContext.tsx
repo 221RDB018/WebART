@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Artwork, CartItem, Frame } from "../types";
-import { useArtworks } from "../data/artworks";
+import { useArtworks } from "../contexts/ArtworksContext";
 
 interface CartContextProps {
   cartItems: CartItem[];

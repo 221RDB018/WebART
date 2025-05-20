@@ -1,20 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { useArtworks } from "../data/artworks";
+import { useArtworks } from "../contexts/ArtworksContext";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Play } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const ArPreview: React.FC = () => {
-  const { id, frameId } = useParams<{ id: string; frameId: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const frameId = searchParams.get('frameId');
   const width = searchParams.get('width');
   const height = searchParams.get('height');
   const isMobile = useIsMobile();
   const { t } = useLanguage();
   const { getArtworkById, getFrameById } = useArtworks();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const artwork = id ? getArtworkById(id) : undefined;
   const frame = frameId ? getFrameById(frameId) : undefined;
@@ -119,18 +124,17 @@ const ArPreview: React.FC = () => {
           
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="font-serif text-xl mb-4">{t('videoTutorial')}</h3>
-            <div className="relative rounded-lg overflow-hidden bg-art-dark aspect-video mb-4">
-              {/* Video placeholder - replace with actual video embed when available */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-art-purple/80 rounded-full p-3 backdrop-blur-sm">
-                  <Play className="h-8 w-8 text-white" />
-                </div>
+            <div className="relative rounded-lg overflow-hidden bg-art-dark mb-4">
+              <div className="w-full max-w-[280px] mx-auto">
+                <video 
+                  className="w-full h-auto"
+                  controls
+                  poster={artwork.imageUrl}
+                >
+                  <source src="/videos/ar-tutorial.mp4" type="video/mp4" />
+                  {t('yourBrowserDoesNotSupportVideo')}
+                </video>
               </div>
-              <img 
-                src={artwork.imageUrl} 
-                alt="Video thumbnail" 
-                className="w-full h-full object-cover opacity-50"
-              />
             </div>
             <p className="text-sm text-muted-foreground mb-4">
               {t('watchTutorial')}

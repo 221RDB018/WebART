@@ -42,7 +42,7 @@ const translations: Translations = {
   // AR Preview
   webARExperience: {
     en: 'WebAR Experience',
-    lv: 'WebAR Pieredze',
+    lv: 'WebAR pieredze',
   },
   experienceDescription: {
     en: 'This feature will allow you to visualize "{title}" on your wall using augmented reality.',
@@ -58,7 +58,7 @@ const translations: Translations = {
   },
   launchAR: {
     en: 'Launch WebAR Experience',
-    lv: 'Sākt WebAR Pieredzi',
+    lv: 'Sākt WebAR pieredzi',
   },
   howItWorks: {
     en: 'How it works',
@@ -82,7 +82,7 @@ const translations: Translations = {
   },
   videoTutorial: {
     en: 'Video Tutorial',
-    lv: 'Video Pamācība',
+    lv: 'Video pamācība',
   },
   watchTutorial: {
     en: 'Watch our quick tutorial to learn how to get the most out of the WebAR experience and place artwork perfectly in your space.',
@@ -90,7 +90,7 @@ const translations: Translations = {
   },
   backToDetails: {
     en: 'Back to Artwork Details',
-    lv: 'Atpakaļ uz Mākslas Darba Informāciju',
+    lv: 'Atpakaļ uz mākslas darba informāciju',
   },
   by: {
     en: 'by',
@@ -102,7 +102,7 @@ const translations: Translations = {
   },
   returnToGallery: {
     en: 'Return to Gallery',
-    lv: 'Atgriezties Galerijā',
+    lv: 'Atgriezties galerijā',
   },
   description: {
     en: 'Description',
@@ -110,15 +110,15 @@ const translations: Translations = {
   },
   selectFrame: {
     en: 'Select Frame',
-    lv: 'Izvēlieties Rāmi',
+    lv: 'Izvēlieties rāmi',
   },
   noFrame: {
     en: 'No Frame',
-    lv: 'Bez Rāmja',
+    lv: 'Bez rāmja',
   },
   customizeSize: {
     en: 'Customize Size',
-    lv: 'Pielāgot Izmēru',
+    lv: 'Pielāgot izmēru',
   },
   dimensions: {
     en: 'Size: {width} × {height} cm',
@@ -138,11 +138,11 @@ const translations: Translations = {
   },
   addToCart: {
     en: 'Add to Cart',
-    lv: 'Pievienot Grozam',
+    lv: 'Pievienot grozam',
   },
   arPreview: {
     en: 'AR Preview',
-    lv: 'AR Pārskats',
+    lv: 'AR pārskats',
   },
   error: {
     en: 'Error',
@@ -234,7 +234,7 @@ const translations: Translations = {
   },
   continueShopping: {
     en: 'Continue Shopping',
-    lv: 'Turpināt Iepirkties',
+    lv: 'Turpināt iepirkties',
   },
   emptyCart: {
     en: 'Your cart is empty',
@@ -242,23 +242,23 @@ const translations: Translations = {
   },
   viewCart: {
     en: 'View Cart',
-    lv: 'Skatīt Grozu',
+    lv: 'Skatīt grozu',
   },
   clearCart: {
     en: 'Clear Cart',
-    lv: 'Iztīrīt Grozu',
+    lv: 'Iztīrīt grozu',
   },
   removeItem: {
     en: 'Remove Item',
-    lv: 'Noņemt Preci',
+    lv: 'Noņemt preci',
   },
   updateQuantity: {
     en: 'Update Quantity',
-    lv: 'Atjaunināt Daudzumu',
+    lv: 'Atjaunināt daudzumu',
   },
   applyCoupon: {
     en: 'Apply Coupon',
-    lv: 'Izmantot Kupona',
+    lv: 'Izmantot kuponu',
   },
   enterCoupon: {
     en: 'Enter coupon code',
@@ -275,7 +275,7 @@ const translations: Translations = {
   // Index page translations
   findArtThatSpeaks: {
     en: 'Find Art That Speaks To You',
-    lv: 'Atrodiet Mākslu, Kas Runā Ar Jums',
+    lv: 'Atrodiet mākslu, kas jūs uzrunā',
   },
   discoverUniqueArtworks: {
     en: 'Discover unique artworks from talented artists and customize them to perfectly fit your space.',
@@ -283,11 +283,11 @@ const translations: Translations = {
   },
   exploreGallery: {
     en: 'Explore Gallery',
-    lv: 'Izpētīt Galeriju',
+    lv: 'Izpētīt galeriju',
   },
   howItWorksTitle: {
     en: 'How It Works',
-    lv: 'Kā Tas Darbojas',
+    lv: 'Kā tas darbojas',
   },
   platformDescription: {
     en: 'Our platform makes it easy to find the perfect artwork for your space and customize it to your exact specifications.',
@@ -295,7 +295,7 @@ const translations: Translations = {
   },
   browseArtwork: {
     en: 'Browse Artwork',
-    lv: 'Pārlūkot Mākslas Darbus',
+    lv: 'Pārlūkot mākslas darbus',
   },
   browseDescription: {
     en: 'Explore our curated collection of artwork from talented artists around the world.',
@@ -319,28 +319,28 @@ const translations: Translations = {
   },
   featuredArtwork: {
     en: 'Featured Artwork',
-    lv: 'Ievērības Cienīgs Mākslas Darbs',
+    lv: 'Ievērības cienīgs mākslas darbs',
   },
   viewAll: {
     en: 'View all',
-    lv: 'Skatīt visu',
+    lv: 'Skatīt visus',
   },
   readyToTransform: {
     en: 'Ready to Transform Your Space?',
-    lv: 'Gatavi Pārveidot Savu Telpu?',
+    lv: 'Gatavi pārveidot savu telpu?',
   },
   exploreCollection: {
     en: 'Explore our curated collection of artwork and find the perfect piece for your home or office.',
-    lv: 'Izpētiet mūsu izvēlēto mākslas darbu kolekciju un atrodiet perfektu gabalu savam mājoklim vai birojam.',
+    lv: 'Izpētiet mūsu izvēlēto mākslas darbu kolekciju un atrodiet perfektu gleznu savam mājoklim vai birojam.',
   },
   browseGallery: {
     en: 'Browse Gallery',
-    lv: 'Pārlūkot Galeriju',
+    lv: 'Pārlūkot galeriju',
   },
   // Gallery page translations
   artGallery: {
     en: 'Art Gallery',
-    lv: 'Mākslas Galerija',
+    lv: 'Mākslas galerija',
   },
   galleryDescription: {
     en: 'Explore our curated collection of unique artworks from talented artists around the world.',
@@ -348,11 +348,11 @@ const translations: Translations = {
   },
   uploadYourArtwork: {
     en: 'Upload Your Artwork',
-    lv: 'Augšupielādēt Savu Mākslas Darbu',
+    lv: 'Augšupielādēt savu mākslas darbu',
   },
   allArtworks: {
     en: 'All Artworks',
-    lv: 'Visi Mākslas Darbi',
+    lv: 'Visi mākslas darbi',
   },
   abstract: {
     en: 'Abstract',
@@ -360,7 +360,7 @@ const translations: Translations = {
   },
   landscape: {
     en: 'Landscape',
-    lv: 'Krajums',
+    lv: 'Ainava',
   },
   portrait: {
     en: 'Portrait',
@@ -372,11 +372,11 @@ const translations: Translations = {
   },
   floral: {
     en: 'Floral',
-    lv: 'Ziedu',
+    lv: 'Ziedi',
   },
   myUploads: {
     en: 'My Uploads',
-    lv: 'Mani Augšupielādes',
+    lv: 'Manas augšupielādes',
   },
   noArtworksFound: {
     en: 'No artworks found in this category.',
@@ -384,7 +384,7 @@ const translations: Translations = {
   },
   uploadFirstArtwork: {
     en: 'Upload Your First Artwork',
-    lv: 'Augšupielādēt Savu Pirmo Mākslas Darbu',
+    lv: 'Augšupielādēt savu pirmo mākslas darbu',
   },
   // ArtworkDetail page translations
   artworkWithDimensions: {
@@ -407,7 +407,7 @@ const translations: Translations = {
   // Artwork translations
   abstractHarmony: {
     en: 'Abstract Harmony',
-    lv: 'Abstrakta Harmonija',
+    lv: 'Abstrakta harmonija',
   },
   abstractHarmonyDesc: {
     en: 'A vibrant explosion of colors that evoke feelings of joy and harmony. Created using acrylic on canvas with a focus on expressive brushwork.',
@@ -415,15 +415,15 @@ const translations: Translations = {
   },
   sereneLandscape: {
     en: 'Serene Landscape',
-    lv: 'Mierīgs Krajums',
+    lv: 'Mierīga ainava',
   },
   sereneLandscapeDesc: {
     en: 'A peaceful landscape capturing the tranquility of a mountain lake at dawn. Oil on canvas with meticulous attention to light and shadow.',
-    lv: 'Mierīgs krajums, kas attēlo kalnu ezera mieru rītausmā. Eļļa uz audekla ar rūpīgu uzmanību gaismai un ēnām.',
+    lv: 'Mierīga ainava, kas attēlo kalnu ezera mieru rītausmā. Eļļa uz audekla ar rūpīgu uzmanību gaismai un ēnām.',
   },
   urbanPerspective: {
     en: 'Urban Perspective',
-    lv: 'Pilsētas Perspektīva',
+    lv: 'Pilsētas perspektīva',
   },
   urbanPerspectiveDesc: {
     en: 'A striking black and white photograph capturing the geometric patterns of modern architecture in the heart of the city.',
@@ -447,7 +447,7 @@ const translations: Translations = {
   },
   geometricDreams: {
     en: 'Geometric Dreams',
-    lv: 'Ģeometriskie Sapņi',
+    lv: 'Ģeometriskie sapņi',
   },
   geometricDreamsDesc: {
     en: 'A modern abstract piece featuring bold geometric shapes and a carefully curated color palette that creates a sense of depth and movement.',
@@ -456,23 +456,108 @@ const translations: Translations = {
   // Frame translations
   classicBlack: {
     en: 'Classic Black',
-    lv: 'Klasiskais Melnais',
+    lv: 'Klasiskais melnais',
   },
   modernWhite: {
     en: 'Modern White',
-    lv: 'Mūsdienu Baltais',
+    lv: 'Mūsdienu baltais',
   },
   naturalWood: {
     en: 'Natural Wood',
-    lv: 'Dabīgais Koka',
+    lv: 'Dabīgais koka',
   },
   goldFinish: {
     en: 'Gold Finish',
-    lv: 'Zelta Apdare',
+    lv: 'Zelta apdare',
   },
   silverMetal: {
     en: 'Silver Metal',
-    lv: 'Sudraba Metāls',
+    lv: 'Sudraba metāls',
+  },
+  // Upload page translations
+  uploadArtwork: {
+    en: 'Upload Your Artwork',
+    lv: 'Augšupielādēt mākslas darbu',
+  },
+  artworkTitle: {
+    en: 'Artwork Title',
+    lv: 'Mākslas darba nosaukums',
+  },
+  enterArtworkTitle: {
+    en: 'Enter artwork title',
+    lv: 'Ievadiet mākslas darba nosaukumu',
+  },
+  artistName: {
+    en: 'Artist Name',
+    lv: 'Mākslinieka vārds',
+  },
+  enterArtistName: {
+    en: 'Enter artist name',
+    lv: 'Ievadiet mākslinieka vārdu',
+  },
+  enterPrice: {
+    en: 'Enter price',
+    lv: 'Ievadiet cenu',
+  },
+  width: {
+    en: 'Width (cm)',
+    lv: 'Platums (cm)',
+  },
+  height: {
+    en: 'Height (cm)',
+    lv: 'Augstums (cm)',
+  },
+  enterDescription: {
+    en: 'Enter artwork description',
+    lv: 'Ievadiet mākslas darba aprakstu',
+  },
+  uploadImage: {
+    en: 'Upload Image',
+    lv: 'Augšupielādēt attēlu',
+  },
+  clickToUpload: {
+    en: 'Click to upload or drag and drop',
+    lv: 'Klikšķiniet, lai augšupielādētu vai velciet un nometiet',
+  },
+  imageFormats: {
+    en: 'PNG, JPG, WEBP (max 10MB)',
+    lv: 'PNG, JPG, WEBP (maks. 10MB)',
+  },
+  preview: {
+    en: 'Preview',
+    lv: 'Priekšskatījums',
+  },
+  removeImage: {
+    en: 'Remove Image',
+    lv: 'Noņemt attēlu',
+  },
+  processing: {
+    en: 'Processing...',
+    lv: 'Apstrādā...',
+  },
+  missingInformation: {
+    en: 'Missing information',
+    lv: 'Trūkst informācijas',
+  },
+  fillAllFields: {
+    en: 'Please fill out all fields and upload an image.',
+    lv: 'Lūdzu, aizpildiet visus laukus un augšupielādējiet attēlu.',
+  },
+  uploadSuccess: {
+    en: 'Artwork uploaded successfully!',
+    lv: 'Mākslas darbs veiksmīgi augšupielādēts!',
+  },
+  addedToGallery: {
+    en: 'Your artwork has been added to the gallery and WebAR experience.',
+    lv: 'Jūsu mākslas darbs ir pievienots galerijai un WebAR pieredzei.',
+  },
+  uploadError: {
+    en: 'Error uploading artwork',
+    lv: 'Kļūda augšupielādējot mākslas darbu',
+  },
+  tryAgain: {
+    en: 'There was a problem adding your artwork. Please try again.',
+    lv: 'Radusies problēma, pievienojot jūsu mākslas darbu. Lūdzu, mēģiniet vēlreiz.',
   },
 };
 

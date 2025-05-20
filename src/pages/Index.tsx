@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Image } from "lucide-react";
-import { useArtworks } from "../data/artworks";
+import { useArtworks } from "../contexts/ArtworksContext";
 import ArtworkCard from "../components/ArtworkCard";
 import { useIsMobile } from "../hooks/use-mobile";
 import { useLanguage } from "../contexts/LanguageContext";

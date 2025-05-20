@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import { CartProvider } from "./contexts/CartContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import { ArtworksProvider } from "./contexts/ArtworksContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Gallery from "./pages/Gallery";
@@ -21,42 +21,42 @@ import UploadArtwork from "./pages/UploadArtwork";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <LanguageProvider>
-          <CartProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Navbar />
-              <main className="min-h-screen">
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/gallery" element={<Gallery />} />
-                  <Route path="/artwork/:id" element={<ArtworkDetail />} />
-                  <Route path="/ar-preview/:id" element={<ArPreview />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/upload-artwork" element={<UploadArtwork />} />
-                  <Route 
-                    path="/profile" 
-                    element={
-                      <RequireAuth>
-                        <Profile />
-                      </RequireAuth>
-                    }
-                  />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-              <Footer />
-            </BrowserRouter>
-          </CartProvider>
-        </LanguageProvider>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
+        <ArtworksProvider>
+          <AuthProvider>
+            <CartProvider>
+              <TooltipProvider>
+                <BrowserRouter>
+                  <div className="min-h-screen flex flex-col">
+                    <Navbar />
+                    <main className="flex-grow">
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/gallery" element={<Gallery />} />
+                        <Route path="/artwork/:id" element={<ArtworkDetail />} />
+                        <Route path="/ar-preview/:id" element={<ArPreview />} />
+                        <Route path="/auth" element={<Auth />} />
+                        <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
+                        <Route path="/upload-artwork" element={<RequireAuth><UploadArtwork /></RequireAuth>} />
+                        <Route path="/404" element={<NotFound />} />
+                        <Route path="*" element={<Navigate to="/404" replace />} />
+                      </Routes>
+                    </main>
+                    <Footer />
+                  </div>
+                </BrowserRouter>
+                <Toaster />
+                <Sonner />
+              </TooltipProvider>
+            </CartProvider>
+          </AuthProvider>
+        </ArtworksProvider>
+      </LanguageProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;

@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { useArtworks } from "../data/artworks";
+import { useArtworks } from "../contexts/ArtworksContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -18,6 +18,10 @@ const ArtworkDetail: React.FC = () => {
   const { getArtworkById, frames } = useArtworks();
   const { addToCart } = useCart();
   const { t } = useLanguage();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const artwork = id ? getArtworkById(id.toString()) : undefined;
 

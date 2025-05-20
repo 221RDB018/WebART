@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Upload, Search, Filter } from 'lucide-react';
-import { useArtworks } from '../data/artworks';
+import { useArtworks } from '../contexts/ArtworksContext';
 import ArtworkCard from '../components/ArtworkCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLanguage } from '../contexts/LanguageContext';
