@@ -131,7 +131,7 @@ const ArPreview: React.FC = () => {
                   controls
                   poster={artwork.imageUrl}
                 >
-                  <source src="/videos/ar-tutorial.mp4" type="video/mp4" />
+                  <source src="/ar-tutorial.mp4" type="video/mp4" />
                   {t('yourBrowserDoesNotSupportVideo')}
                 </video>
               </div>

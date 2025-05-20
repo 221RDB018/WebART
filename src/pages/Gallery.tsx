@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -57,40 +56,22 @@ const Gallery: React.FC = () => {
         </div>
 
         <Tabs defaultValue="all" className="mb-6">
-          {isMobile ? (
-            <div className="mb-6 overflow-hidden">
-              <ScrollArea className="w-full">
-                <div className="pb-4">
-                  <TabsList className="inline-flex w-max px-4">
-                    {categories.map(category => (
-                      <TabsTrigger 
-                        key={category.id} 
-                        value={category.id}
-                        onClick={() => setActiveCategory(category.id)}
-                        className="whitespace-nowrap px-4"
-                      >
-                        {category.name}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                </div>
-              </ScrollArea>
-            </div>
-          ) : (
-            <div className="flex justify-center mb-6">
-              <TabsList>
+          <div className="mb-6">
+            <div className="w-full overflow-x-auto">
+              <TabsList className="inline-flex min-w-full px-4">
                 {categories.map(category => (
                   <TabsTrigger 
                     key={category.id} 
                     value={category.id}
                     onClick={() => setActiveCategory(category.id)}
+                    className="flex-shrink-0"
                   >
                     {category.name}
                   </TabsTrigger>
                 ))}
               </TabsList>
             </div>
-          )}
+          </div>
           
           <div>
             {categories.map(category => (
