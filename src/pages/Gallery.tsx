@@ -58,16 +58,16 @@ const Gallery: React.FC = () => {
 
         <Tabs defaultValue="all" className="mb-6">
           {isMobile ? (
-            <div className="mb-6">
+            <div className="mb-6 overflow-hidden">
               <ScrollArea className="w-full">
-                <div className="py-1">
-                  <TabsList className="flex w-max">
+                <div className="pb-4">
+                  <TabsList className="inline-flex w-max px-4">
                     {categories.map(category => (
                       <TabsTrigger 
                         key={category.id} 
                         value={category.id}
                         onClick={() => setActiveCategory(category.id)}
-                        className="min-w-fit"
+                        className="whitespace-nowrap px-4"
                       >
                         {category.name}
                       </TabsTrigger>
