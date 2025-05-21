@@ -255,7 +255,7 @@ window.goBack = function() {
   const height = urlParams.get('height');
 
   // Формируем URL для возврата на страницу ArPreview
-  let returnUrl = `/ar-preview/${artworkId}`;
+  let returnUrl = `../ar-preview/${artworkId}`;
   const params = new URLSearchParams();
   
   if (frameId) params.set('frameId', frameId);

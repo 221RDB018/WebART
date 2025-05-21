@@ -1,0 +1,20 @@
+{
+  "rewrites": [
+    {
+      "source": "/ar-preview/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/artwork/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/gallery",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/upload",
+      "destination": "/index.html"
+    }
+  ]
+} 
