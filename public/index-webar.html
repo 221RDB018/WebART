@@ -184,7 +184,9 @@
     </div>
     
     <div id="ar-failure">AR is not tracking</div>
-    <div id="instruction-box">Point your phone to the wall. Tap once to place artwork. Tap on the artwork to adjust position.</div>
+    <!-- <div id="instruction-box">Point your phone to the wall. Tap once to place artwork. Tap on the artwork to adjust position.</div> -->
+    <div id="instruction-box">Vērsiet tālruni pret sienu. Pieskarieties vienreiz, lai novietotu mākslas darbu. Pieskarieties mākslas darbam, lai pielāgotu tā pozīciju.</div>
+
     
     <script type="importmap">
       { 
@@ -402,9 +404,12 @@ async function init() {
   const loadingMessage = document.getElementById('loading-message');
   loadingMessage.innerHTML = `
     <h1>${artwork.title}</h1>
-    <div class="artwork-details">by ${artwork.artist}</div>
-    <div>Press Start AR to launch the AR experience</div>
+    <div class="artwork-details">Autors: ${artwork.artist}</div>
+  <div>Nospiediet Start AR, lai sāktu AR pieredzi</div>
   `;
+  // <div class="artwork-details">by ${artwork.artist}</div>
+//     <div>Press Start AR to launch the AR experience</div>
+
   
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 10);
@@ -468,20 +473,17 @@ async function init() {
 
 function onSelect() {
   if (!placed) {
+    placed = true;
     if (model.visible) {
-      placed = true;
-      controls.attach(model);
-      controls.visible = false;
-      controlsVisible = false;
     } else {
       model.visible = true;
       model.position.set(0, 0, -1).applyMatrix4(camera.matrixWorld);
       model.quaternion.copy(camera.quaternion);
-      placed = true;
-      controls.attach(model);
-      controls.visible = false;
-      controlsVisible = false;
     }
+    controls.attach(model);
+    controls.visible = false;
+    controlsVisible = false;
+
   } else {
     raycaster.setFromXRController(controller);
     const intersects = raycaster.intersectObject(model, true);

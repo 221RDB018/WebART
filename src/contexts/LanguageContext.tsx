@@ -573,13 +573,13 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
     
     let translated = translations[key][language];
-
+    
     if (params) {
       Object.entries(params).forEach(([paramKey, paramValue]) => {
         translated = translated.replace(`{${paramKey}}`, paramValue);
       });
     }
-      
+    
     return translated;
   };
 
