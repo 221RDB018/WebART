@@ -26,10 +26,9 @@ const Gallery: React.FC = () => {
     { id: 'custom', name: t('myUploads') }
   ];
 
-  // Use local data directly instead of fetching from Supabase
   const allArtworks = artworks.map(art => ({
     ...art,
-    id: art.id.toString() // Ensure all IDs are strings for consistency
+    id: art.id.toString()
   }));
 
   const filteredArtworks = activeCategory === 'all' 

@@ -1,9 +1,7 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
-// Define available languages
 type Language = 'en' | 'lv';
 
-// Translation data structure
 interface Translations {
   [key: string]: {
     en: string;
@@ -11,14 +9,11 @@ interface Translations {
   };
 }
 
-// Create translation dictionary
 const translations: Translations = {
-  // Common
   back: {
     en: 'Back',
     lv: 'Atpakaļ',
   },
-  // Navbar
   home: {
     en: 'Home',
     lv: 'Sākums',
@@ -39,7 +34,6 @@ const translations: Translations = {
     en: 'Review your selected items',
     lv: 'Pārskatiet izvēlētos priekšmetus',
   },
-  // AR Preview
   webARExperience: {
     en: 'WebAR Experience',
     lv: 'WebAR pieredze',
@@ -272,7 +266,6 @@ const translations: Translations = {
     en: 'Coupon applied successfully',
     lv: 'Kupons veiksmīgi piemērots',
   },
-  // Index page translations
   findArtThatSpeaks: {
     en: 'Find Art That Speaks To You',
     lv: 'Atrodiet mākslu, kas jūs uzrunā',
@@ -337,7 +330,6 @@ const translations: Translations = {
     en: 'Browse Gallery',
     lv: 'Pārlūkot galeriju',
   },
-  // Gallery page translations
   artGallery: {
     en: 'Art Gallery',
     lv: 'Mākslas galerija',
@@ -386,12 +378,10 @@ const translations: Translations = {
     en: 'Upload Your First Artwork',
     lv: 'Augšupielādēt savu pirmo mākslas darbu',
   },
-  // ArtworkDetail page translations
   artworkWithDimensions: {
     en: 'Artwork ({width} × {height} cm)',
     lv: 'Mākslas darbs ({width} × {height} cm)',
   },
-  // Footer translations
   footerDescription: {
     en: 'Discover unique art pieces from talented artists around the world and customize them to perfectly fit your space.',
     lv: 'Iepazīstieties ar unikāliem mākslas darbiem no talantīgiem māksliniekiem visā pasaulē un pielāgojiet tos, lai tie ideāli iederētos jūsu telpā.',
@@ -404,7 +394,6 @@ const translations: Translations = {
     en: '© {year} WebART. All rights reserved.',
     lv: '© {year} WebART. Visas tiesības aizsargātas.',
   },
-  // Artwork translations
   abstractHarmony: {
     en: 'Abstract Harmony',
     lv: 'Abstrakta harmonija',
@@ -453,7 +442,6 @@ const translations: Translations = {
     en: 'A modern abstract piece featuring bold geometric shapes and a carefully curated color palette that creates a sense of depth and movement.',
     lv: 'Mūsdienu abstrakts darbs ar izteiksmīgām ģeometriskām formām un rūpīgi izvēlētu krāsu paleti, kas rada dziļuma un kustības sajūtu.',
   },
-  // Frame translations
   classicBlack: {
     en: 'Classic Black',
     lv: 'Klasiskais melnais',
@@ -474,7 +462,6 @@ const translations: Translations = {
     en: 'Silver Metal',
     lv: 'Sudraba metāls',
   },
-  // Upload page translations
   uploadArtwork: {
     en: 'Upload Your Artwork',
     lv: 'Augšupielādēt mākslas darbu',
@@ -570,18 +557,15 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Get language from localStorage if available, default to English
   const [language, setLanguage] = useState<Language>(() => {
     const storedLanguage = localStorage.getItem('language') as Language;
     return storedLanguage ? storedLanguage : 'en';
   });
 
-  // Update localStorage when language changes
   useEffect(() => {
     localStorage.setItem('language', language);
   }, [language]);
 
-  // Translation function
   const t = (key: string, params?: Record<string, string>) => {
     if (!translations[key]) {
       console.warn(`Translation key not found: ${key}`);
@@ -589,14 +573,13 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
     
     let translated = translations[key][language];
-    
-    // Replace parameters in the translated string if they exist
+
     if (params) {
       Object.entries(params).forEach(([paramKey, paramValue]) => {
         translated = translated.replace(`{${paramKey}}`, paramValue);
       });
     }
-    
+      
     return translated;
   };
 

@@ -34,8 +34,8 @@
 
       #loading-message {
         background: rgba(26, 31, 44, 0.8);
-        top: 50%;
         color: white;
+        top: 50%;
         padding: 16px 24px;
         border-radius: 12px;
         font-size: 16px;
@@ -129,40 +129,6 @@
         z-index: 10;
       }
       
-      /* XRButton styling */
-      /* #ARButton {
-        position: absolute;
-        bottom: 24px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #9b87f5;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        font-family: 'Inter', sans-serif;
-        font-size: 16px;
-        z-index: 30;
-        transition: background 0.2s ease;
-        appearance: none;
-        width: 90%;
-        max-width: 240px;
-        text-align: center;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      } */
-      
-      #ARButton:hover {
-        background: #7E69AB;
-      }
-      
-      #ARButton:disabled {
-        background: #666;
-        cursor: not-allowed;
-        opacity: 0.7;
-      }
-      
       h1 {
         font-family: 'Playfair Display', serif;
         margin-bottom: 16px;
@@ -175,17 +141,11 @@
         margin-bottom: 24px;
       }
       
-      /* Media queries for better mobile adaptability */
       @media (max-height: 600px) {
         #instruction-box {
           bottom: 80px;
           padding: 10px 16px;
           font-size: 13px;
-        }
-        
-        #ARButton {
-          bottom: 20px;
-          padding: 10px 16px;
         }
         
         h1 {
@@ -204,10 +164,6 @@
           font-size: 14px;
         }
         
-        /* #timer-display {
-          padding: 6px 10px;
-          font-size: 14px;
-        } */
       }
     </style>
   </head>
@@ -228,7 +184,6 @@
     </div>
     
     <div id="ar-failure">AR is not tracking</div>
-    <!-- <div id="timer-display"></div> -->
     <div id="instruction-box">Point your phone to the wall. Tap once to place artwork. Tap on the artwork to adjust position.</div>
     
     <script type="importmap">
@@ -246,16 +201,13 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import { XREstimatedLight } from 'three/addons/webxr/XREstimatedLight.js';
 
-// Function to go back to previous page
 window.goBack = function() {
-  // Получаем параметры из URL
   const urlParams = new URLSearchParams(window.location.search);
   const artworkId = urlParams.get('artworkId');
   const frameId = urlParams.get('frameId');
   const width = urlParams.get('width');
   const height = urlParams.get('height');
 
-  // Формируем URL для возврата на страницу ArPreview
   let returnUrl = `../ar-preview/${artworkId}`;
   const params = new URLSearchParams();
   
@@ -279,12 +231,10 @@ let controls, raycaster;
 let defaultEnvironment;
 let controlsVisible = false;
 
-// Get parameters from URL
 const urlParams = new URLSearchParams(window.location.search);
 const artworkId = urlParams.get('artworkId');
 const frameId = urlParams.get('frameId');
 
-// Initialize data from artworks.ts
 const initialArtworks = {
   "1": {
     id: "1",
@@ -330,17 +280,14 @@ const initialArtworks = {
   }
 };
 
-// Get artwork data from localStorage or use initial data
 let artworks = JSON.parse(localStorage.getItem('webarArtworks') || '{}');
 console.log(artworks);
 
-// If there's no data in localStorage or it's outdated, use initial data
 if (Object.keys(artworks).length === 0 || !artworks["1"]) {
   artworks = initialArtworks;
   localStorage.setItem('webarArtworks', JSON.stringify(artworks));
 }
 
-// Frame data
 const frames = {
   "frame-1": {
     id: "frame-1",
@@ -384,7 +331,6 @@ const frames = {
   }
 };
 
-// Get artwork and frame data
 function getArtworkData() {
   const artwork = artworks[artworkId];
   const frame = frameId ? frames[frameId] : null;
@@ -399,16 +345,13 @@ function getArtworkData() {
 function createArtworkModel(artwork, frame) {
   const group = new THREE.Group();
   
-  // Get dimensions from URL parameters or use original dimensions
   const customWidth = urlParams.get('width') ? parseFloat(urlParams.get('width')) : artwork.dimensions.width;
   const customHeight = urlParams.get('height') ? parseFloat(urlParams.get('height')) : artwork.dimensions.height;
   
-  // Convert dimensions from cm to meters
   const width = customWidth / 100;
   const height = customHeight / 100;
   console.log('Custom dimensions:', width, height);
   
-  // Create painting
   const paintingGeometry = new THREE.PlaneGeometry(width, height);
   const texture = new THREE.TextureLoader().load(artwork.imageUrl);
   const paintingMaterial = new THREE.MeshStandardMaterial({
@@ -421,10 +364,9 @@ function createArtworkModel(artwork, frame) {
   painting.name = 'painting';
   group.add(painting);
   
-  // Create frame if selected
   if (frame) {
-    const frameThickness = 0.02; // 2 cm
-    const frameDepth = 0.015;    // 1.5 cm
+    const frameThickness = 0.02; 
+    const frameDepth = 0.015;    
     
     const frameMaterial = new THREE.MeshStandardMaterial({
       color: frame.color,
@@ -439,7 +381,6 @@ function createArtworkModel(artwork, frame) {
       return mesh;
     }
     
-    // Create frame parts based on painting dimensions
     const topFrame = createFramePiece(width + frameThickness * 2, frameThickness, frameDepth, height/2 + frameThickness/2);
     const bottomFrame = createFramePiece(width + frameThickness * 2, frameThickness, frameDepth, -height/2 - frameThickness/2);
     const leftFrame = createFramePiece(frameThickness, height + frameThickness * 2, frameDepth, 0, -width/2 - frameThickness/2);
@@ -456,10 +397,8 @@ function createArtworkModel(artwork, frame) {
 }
 
 async function init() {
-  // Load data
   const { artwork, frame } = await getArtworkData();
   
-  // Update loading message with artwork info
   const loadingMessage = document.getElementById('loading-message');
   loadingMessage.innerHTML = `
     <h1>${artwork.title}</h1>
@@ -476,14 +415,10 @@ async function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.xr.enabled = true;
 
-  // Use the official ARButton
   const arButton = ARButton.createButton(renderer, {
         requiredFeatures: ['hit-test'],
         optionalFeatures: ['local-floor', 'light-estimation']
       });
-
-  // Apply our custom styling to ARButton
-  
   
   document.body.appendChild(arButton);
   arButton.id = 'ARButton';
@@ -500,7 +435,6 @@ async function init() {
   defaultLight.position.set(0.5, 1, 0.25);
   scene.add(defaultLight);
 
-  // Create model with artwork and frame data
   model = createArtworkModel(artwork, frame);
   model.visible = false;
   scene.add(model);
@@ -534,14 +468,12 @@ async function init() {
 
 function onSelect() {
   if (!placed) {
-    // Если модель видна (hit test нашел поверхность), используем текущую позицию
     if (model.visible) {
       placed = true;
       controls.attach(model);
       controls.visible = false;
       controlsVisible = false;
     } else {
-      // Если hit test не нашел поверхность, размещаем на фиксированном расстоянии
       model.visible = true;
       model.position.set(0, 0, -1).applyMatrix4(camera.matrixWorld);
       model.quaternion.copy(camera.quaternion);
@@ -597,9 +529,8 @@ function render(timestamp, frame) {
           model.position.copy(pose.transform.position);
           placed = true;
           
-          // Hide instruction container when artwork is placed
-          //document.getElementById('instruction-container').style.display = 'none';
-          //document.getElementById('instruction-box').textContent = 'Tap on the artwork to move, rotate, or scale it';
+          document.getElementById('instruction-container').style.display = 'none';
+          document.getElementById('instruction-box').textContent = 'Tap on the artwork to move, rotate, or scale it';
         }
       }
     }

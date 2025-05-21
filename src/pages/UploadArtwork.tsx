@@ -10,7 +10,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { useArtworks } from "../contexts/ArtworksContext";
 import { useLanguage } from "../contexts/LanguageContext";
 
-// Функция для конвертации File в Base64
 const fileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -20,12 +19,10 @@ const fileToBase64 = (file: File): Promise<string> => {
   });
 };
 
-// Функция для получения размеров изображения
 const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
-      // Конвертируем пиксели в сантиметры (примерно 96 DPI = 37.8 пикселей на сантиметр)
       const pixelsPerCm = 37.8;
       const width = Math.round(img.width / pixelsPerCm)*5;
       const height = Math.round(img.height / pixelsPerCm)*5;
@@ -36,7 +33,6 @@ const getImageDimensions = (file: File): Promise<{ width: number; height: number
   });
 };
 
-// Функция для сжатия изображения
 const compressImage = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -49,11 +45,9 @@ const compressImage = (file: File): Promise<string> => {
         let width = img.width;
         let height = img.height;
         
-        // Максимальные размеры
         const MAX_WIDTH = 1200;
         const MAX_HEIGHT = 1200;
         
-        // Изменяем размеры, сохраняя пропорции
         if (width > height) {
           if (width > MAX_WIDTH) {
             height = Math.round((height * MAX_WIDTH) / width);
@@ -77,7 +71,6 @@ const compressImage = (file: File): Promise<string> => {
         
         ctx.drawImage(img, 0, 0, width, height);
         
-        // Получаем сжатое изображение в формате JPEG с качеством 0.7
         const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
         resolve(compressedDataUrl);
       };
@@ -99,26 +92,23 @@ const UploadArtwork: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [dimensions, setDimensions] = useState({
-    width: 40,  // Default width in cm
-    height: 50  // Default height in cm
+    width: 40,  
+    height: 50  
   });
   const [isUploading, setIsUploading] = useState(false);
 
-  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB в байтах
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; 
 
-  // При загрузке компонента загружаем сохраненные работы
   useEffect(() => {
     const savedArtworks = localStorage.getItem('savedArtworks');
     if (savedArtworks) {
       const parsedArtworks = JSON.parse(savedArtworks);
-      // Обновляем глобальный массив artworks
-      artworks.length = 0; // Очищаем массив
-      artworks.push(...parsedArtworks); // Добавляем сохраненные работы
+      artworks.length = 0; 
+      artworks.push(...parsedArtworks); 
     }
 
     const webarArtworks = localStorage.getItem('webarArtworks');
     if (!webarArtworks) {
-      // Инициализируем хранилище начальными данными из artworks
       const initialData = artworks.reduce((acc, artwork) => {
         acc[artwork.id] = {
           id: artwork.id,
@@ -137,7 +127,6 @@ const UploadArtwork: React.FC = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      // Проверяем размер файла
       if (file.size > MAX_FILE_SIZE) {
         toast({
           title: t('error'),
@@ -150,7 +139,6 @@ const UploadArtwork: React.FC = () => {
       setImageFile(file);
       
       try {
-        // Сжимаем изображение
         const compressedImage = await compressImage(file);
         setImagePreview(compressedImage);
         
@@ -200,7 +188,6 @@ const UploadArtwork: React.FC = () => {
 
     try {
       const newId = uuidv4();
-      // Используем уже сжатое изображение из превью
       const imageBase64 = imagePreview || await compressImage(imageFile);
     
       const newArtwork = {
@@ -217,14 +204,11 @@ const UploadArtwork: React.FC = () => {
         category: "custom"
       };
     
-      // Обновляем artworks с помощью setArtworks
       const updatedArtworks = [newArtwork, ...artworks];
       setArtworks(updatedArtworks);
       
-      // Сохраняем в localStorage
       localStorage.setItem('savedArtworks', JSON.stringify(updatedArtworks));
       
-      // Обновляем данные для WebAR
       updateWebARData(newArtwork);
     
       toast({

@@ -28,7 +28,6 @@ const ArtworkDetail: React.FC = () => {
   const [selectedFrame, setSelectedFrame] = useState<Frame | undefined>(undefined);
   const [scale, setScale] = useState(1);
 
-  // Calculate dimensions based on scale
   const customWidth = useMemo(() => {
     if (!artwork) return 60;
     return Math.round(artwork.dimensions.width * scale);
@@ -39,7 +38,6 @@ const ArtworkDetail: React.FC = () => {
     return Math.round(artwork.dimensions.height * scale);
   }, [artwork, scale]);
 
-  // Calculate min and max scale
   const minScale = useMemo(() => {
     if (!artwork) return 0.5;
     return 0.5;
@@ -69,8 +67,7 @@ const ArtworkDetail: React.FC = () => {
     const frame = frames.find(f => f.id === frameId);
     setSelectedFrame(frame);
   };
-
-  // Calculate price based on dimensions
+  
   const originalArea = artwork.dimensions.width * artwork.dimensions.height;
   const customArea = customWidth * customHeight;
   const sizeFactor = customArea / originalArea;
