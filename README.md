@@ -23,6 +23,8 @@ Izstrādāt tīmeklī balstītu WebAR risinājumu, kas uzlabo mākslas darbu ieg
 - Objektu var pārvietot pa X, Y, Z asīm
 - Pilnībā darbojas pārlūkā — nav jāinstalē lietotne
 
+- Prototipa fails atrodas: public\index-webar.html
+
 ## Izmantotās tehnoloģijas
 
 - **HTML / CSS / JavaScript**
