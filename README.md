@@ -2,6 +2,8 @@
 
 Šis repozitorijs satur pilnfunkcionālu tīmekļa vietni ar lietotāja saskarni un WebAR prototipu, kas ļauj lietotājiem vizualizēt izvēlētos mākslas darbus papildinātajā realitātē, izmantojot tikai mobilo ierīci un pārlūkprogrammu.
 
+Saite uz izstrādāto vietni: https://webart-eta.vercel.app/
+
 ## Projekta mērķis
 
 Izstrādāt tīmeklī balstītu WebAR risinājumu, kas uzlabo mākslas darbu iegādes pieredzi tiešsaistē, ļaujot lietotājam vizuāli novērtēt, kā konkrēts darbs izskatīsies viņa telpā.
